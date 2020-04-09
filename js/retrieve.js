@@ -7,15 +7,17 @@ function retrieveData(address) {
 			if ( response.status != 200 ) {
 				iflog("retrieveData.fetch.resolve: Response non-200");
 				reject(address, response);
+				// STATE: ERROR, non-200 response
 				return;
 			}
 			var rawData = this.responseText;
 			iflog("retrieveData.fetch.resolve: Data Retrieved");
-			// STATE: 3, Data Retrieved
+			// STATE: 3, Data Loaded
 			resolve(rawData);
 		}).catch((err) => {
 			iflog("retrieveData.fetch.reject: Error");
 			reject(address, response);
+			// STATE: ERROR, fetch failed
 		})
 		iflog("retrieveData(): Data Requested");
 		// STATE: 2, Loading Data
