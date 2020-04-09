@@ -8,8 +8,9 @@ var DATAURLS = [
 
 // LOGON is a global variable to turn verbose logging on
 var LOGON=true
-// DATA is where data will be stored
-var DATA
+
+// data is the active dataset
+var data = new Data();
 
 // iflog logs if LOGON is true
 function iflog(message) {
@@ -25,7 +26,8 @@ window.addEventListener("load", (event) => {
 
 	// NOTE: we won't use Promise.all because we want each promise to be evaluated individually for success or failure- not fail on first.
 	DATAURLS.map(retrieveData).forEach((promise) => {
-		promise.then(detectAndProcess).catch((address, res) => { 
+		// Note: can't call class method directly because promise strips it from it's class instance >:O
+		promise.then(raw => data.readCSV(raw)).catch(address => { 
 			// STATE: Error, address failed
 			iflog("window.load(): " + address + " did not resolve properly.") 
 		} )
