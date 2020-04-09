@@ -3,7 +3,6 @@
 // List of datasources
 var DATAURLS = [ 
 	"https://covidclinicaldata.com/data/carbonhealth_and_braidhealth/ALL/4.6_carbonhealth_and_braidhealth.csv",
-	"https://covidclinicaldata.com/data/carbonhealth_and_braidhealth/ALL/4.6_carbonhealth_and_braidhealth.cs",
 	];
 
 // LOGON is a global variable to turn verbose logging on
@@ -30,7 +29,6 @@ window.addEventListener("load", (event) => {
 		promise.then(raw => data.readCSV(raw)).catch(address => { 
 			// STATE: Error, address failed
 			iflog("window.load(): " + address + " did not resolve properly.") 
-		} )
+		})
 	})
-
 })
