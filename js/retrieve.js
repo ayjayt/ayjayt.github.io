@@ -3,20 +3,20 @@
 // retrieveData is called by window.load event w/ data address and a callback function
 function retrieveData(address) {
 	return new Promise( (resolve, reject) => {
-		var req = setError(new XMLHttpRequest(), address, reject)
-		req.addEventListener("load", function(e) {
-			if ( req.status != 200 ) {
-				iflog("retrieveData.req.load(): Response non 200");
-				reject(address, req);
+		fetch(address).then((response) => {
+			if ( response.status != 200 ) {
+				iflog("retrieveData.fetch.resolve: Response non-200");
+				reject(address, response);
 				return;
 			}
-			rawData = this.responseText;
-			iflog("retrieveData.req.load(): Data Retrieved");
+			var rawData = this.responseText;
+			iflog("retrieveData.fetch.resolve: Data Retrieved");
 			// STATE: 3, Data Retrieved
-			resolve(rawData); // This is like a success callback, basically TODO
+			resolve(rawData);
+		}).catch((err) => {
+			iflog("retrieveData.fetch.reject: Error");
+			reject(address, response);
 		})
-		req.open("GET", address);
-		req.send();
 		iflog("retrieveData(): Data Requested");
 		// STATE: 2, Loading Data
 	})

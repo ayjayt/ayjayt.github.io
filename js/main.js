@@ -1,5 +1,7 @@
 // main.js includes some utilities and is a basic outline of the program
 
+
+// List of datasources
 var DATAURLS = [ 
 	"https://covidclinicaldata.com/data/carbonhealth_and_braidhealth/ALL/4.6_carbonhealth_and_braidhealth.csv",
 	"https://covidclinicaldata.com/data/carbonhealth_and_braidhealth/ALL/4.6_carbonhealth_and_braidhealth.cs",
@@ -42,10 +44,12 @@ function detectAndProcess(raw) {
 window.addEventListener("load", (event) => {
 	// STATE: 1, Window Loaded
 	iflog("window.load(): Window Loaded")
+
 	// NOTE: we wont use Promise.all because we want each promise to be evaluated individually
 	DATAURLS.map(retrieveData).forEach( (promise) => {
-		promise.then(detectAndProcess).catch( (address, req) => { 
+		promise.then(detectAndProcess).catch( (address, res) => { 
 			iflog("window.load(): " + address + " did not resolve properly.") 
 		} )
 	})
+
 })
