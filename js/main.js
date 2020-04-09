@@ -1,5 +1,10 @@
 // main.js includes some utilities and is a basic outline of the program
 
+var DATAURLS = [ 
+	"https://covidclinicaldata.com/data/carbonhealth_and_braidhealth/ALL/4.6_carbonhealth_and_braidhealth.csv",
+	"https://covidclinicaldata.com/data/carbonhealth_and_braidhealth/ALL/4.6_carbonhealth_and_braidhealth.cs",
+	];
+
 // LOGON is a global variable to turn verbose logging on
 var LOGON=true
 // DATA is where data will be stored
@@ -12,15 +17,15 @@ function iflog(message) {
 	}
 }
 
-// setError takes and returns an HTTP request se with basic error handling. It takes a string for logging (err) and an errFunc for custom action.
-function setError(req, err, errFunc) {
+// setError takes and returns an HTTP request with basic error handling set. It takes the req's supplied address string and an  an errFunc for custom action.
+// NOTE: It doesn't not catch non-200 status codes! That is a valid response as far as xhr is concerned!
+function setError(req, address, errFunc) {
 	req.timeout = 1200;
 	req.onerror = function() {
 		// STATE: ERROR, Catchall
 		iflog("setError(): XHTTP ERROR");
-		iflog("setError(): " + err);
 		if (errFunc) {
-			errFunc();
+			errFunc(address, req);
 		}
 	}
 	return req;
@@ -37,5 +42,10 @@ function detectAndProcess(raw) {
 window.addEventListener("load", (event) => {
 	// STATE: 1, Window Loaded
 	iflog("window.load(): Window Loaded")
-	retrieveData("https://covidclinicaldata.com/data/carbonhealth_and_braidhealth/ALL/4.6_carbonhealth_and_braidhealth.csv", detectAndProcess) // TODO Takes a callback, should be a promise
+	// NOTE: we wont use Promise.all because we want each promise to be evaluated individually
+	DATAURLS.map(retrieveData).forEach( (promise) => {
+		promise.then(detectAndProcess).catch( (address, req) => { 
+			iflog("window.load(): " + address + " did not resolve properly.") 
+		} )
+	})
 })
