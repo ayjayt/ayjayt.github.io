@@ -6,7 +6,6 @@ class Data {
 	constructor() {
 		this.data = [];
 		this.positive = [];
-		this.negative = [];
 	}
 
 
@@ -15,8 +14,10 @@ class Data {
 		iflog("detectAndProcess(): processing");
 		// Since there is only one format... we don't need to detect yet
 		try {
+			// STATE 3: detect schema of CSV object
+			// STATE 4: convert javascript object to object conforming to our universal schema
 			this.data = processCSVversion0(raw);
-			// Create basic domain. A lot of manual work on the moment.
+			// STATE 5: create column "supersets"- all possible datapoints for each column (state 4 and state 3 might be the same)
 			this.positive = this.data.filter(datum => datum.covid19_test_results === "Positive");
 			this.columns = [
 				{ "ctab": this.positive.filter(datum => datum.ctab === "TRUE") },
@@ -48,6 +49,20 @@ class Data {
 			// STATE: Error, the data couldn't be processed or wasn't detected correctly
 			// Want to know what address there was an error for
 		}
+	}
+
+	// writeTotals populates a graph with percentages. This function is really a place holder. We're probably going to be creating "views" based on filters. This is a TODO.
+	writeTotals(target, filters) {
+		var totalPatients = this.positive.length;
+		var columnsHeight = 100/this.columns.length;
+		var bar = d3.select('#bar-chart').selectAll('div')
+		bar = bar.data(this.columns)
+		bar = bar.enter()
+		bar = bar.append('div')
+		bar = bar.style('width', d => {
+				return (100 * (Object.values(d)[0].length / totalPatients) + 1) + "%";
+			})  // should be responsive
+		bar = bar.style('height', columnsHeight + "%") // but could be responsive
 	}
 }
 

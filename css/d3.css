@@ -1,5 +1,9 @@
 #bar-chart {
-	height: 200px;
-	width: 500px;
-	border: 1px solid black;
+	height: 100%;
+	width: 100%;
+}
+#bar-chart div {
+	background-color: black;
+	border-bottom: 1px solid white;
+	color: lightblue;
 }
