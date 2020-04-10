@@ -1,11 +1,37 @@
 // process.js detects csv type and converts the csv to a unified data format.
 // the unified data format is like a protocol buffer in that the schema can only grow.
 
+// Checking column patterns is how we're determing schema right now
+const CSVVersion0Columns = JSON.stringify(["clinic_state", "test_name", "covid19_test_results", "age", "high_risk_exposure_occupation", "high_risk_interactions", "diabetes", "chd", "htn", "cancer", "asthma", "copd", "autoimmune_dis", "temperature", "pulse", "sys", "dia", "rr", "o2sat", "rapid_flu", "rapid_flu_result", "rapid_strep", "rapid_strep_result", "ctab", "dyspnea", "rhonchi", "wheezes", "cough", "cough_severity", "fever", "sob", "sob_severity", "diarrhea", "fatigue", "headache", "loss_of_smell", "loss_of_taste", "runny_nose", "muscle_sore", "sore_throat", "cxr_findings", "cxr_impression", "cxr_link"])
+
 // Data class represents the ultimate schema.
 class Data {
 	constructor() {
-		this.data = [];
-		this.positive = [];
+		// These are the dependent variables, basically. A lot of redundancy here.
+		this.totalPatients = 0;
+		this.columns = [
+			{ "dyspnea": [] },
+			{ "rhonchi": [] },
+			{ "wheezes": [] },
+			{ "cough": [] },
+			{ "cough_mild": [] },
+			{ "cough_moderate": [] },
+			{ "cough_severe": [] },
+			{ "fever": [] },
+			{ "sob": [] },
+			{ "sob_mild": [] },
+			{ "sob_moderate": [] },
+			{ "sob_severe":[] },
+			{ "diarrhea": [] },
+			{ "fatigue": [] },
+			{ "headache": [] },
+			{ "loss_of_smell": [] },
+			{ "loss_of_taste": [] },
+			{ "runny_nose": [] },
+			{ "muscle_throat": [] },
+			{ "sore_throat": [] },
+			{ "cxr_impression": [] }
+		]
 	}
 
 
@@ -14,35 +40,11 @@ class Data {
 		iflog("detectAndProcess(): processing");
 		// Since there is only one format... we don't need to detect yet
 		try {
-			// STATE 3: detect schema of CSV object
-			// STATE 4: convert javascript object to object conforming to our universal schema
-			this.data = processCSVversion0(raw);
-			// STATE 5: create column "supersets"- all possible datapoints for each column (state 4 and state 3 might be the same)
-			this.positive = this.data.filter(datum => datum.covid19_test_results === "Positive");
-			this.columns = [
-				{ "ctab": this.positive.filter(datum => datum.ctab === "TRUE") },
-				{ "dyspnea": this.positive.filter(datum => datum.dyspnea === "TRUE") },
-				{ "rhonchi": this.positive.filter(datum => datum.rhonchi === "TRUE") },
-				{ "wheezes": this.positive.filter(datum => datum.wheezes === "TRUE") },
-				{ "cough": this.positive.filter(datum => datum.cough === "TRUE") },
-				{ "cough_mild": this.positive.filter(datum => datum.cough_severity === "Mild") },
-				{ "cough_moderate": this.positive.filter(datum => datum.cough_severity === "Moderate") },
-				{ "cough_severe": this.positive.filter(datum => datum.cough_severity === "Severe") },
-				{ "fever": this.positive.filter(datum => datum.fever === "TRUE")  },
-				{ "sob": this.positive.filter(datum => datum.sob === "TRUE") },
-				{ "sob_mild": this.positive.filter(datum => datum.sob_severity === "Mild") },
-				{ "sob_moderate": this.positive.filter(datum => datum.sob_severity === "Moderate") },
-				{ "sob_severe": this.positive.filter(datum => datum.sob_severity === "Severe") },
-				{ "diarrhea": this.positive.filter(datum => datum.diarrhea === "TRUE") },
-				{ "fatigue": this.positive.filter(datum => datum.fatigue === "TRUE") },
-				{ "headache": this.positive.filter(datum => datum.headache === "TRUE") },
-				{ "loss_of_smell": this.positive.filter(datum => datum.loss_of_smell === "TRUE") },
-				{ "loss_of_taste": this.positive.filter(datum => datum.loss_of_taste === "TRUE") },
-				{ "runny_nose": this.positive.filter(datum => datum.runny_nose === "TRUE") },
-				{ "muscle_throat": this.positive.filter(datum => datum.muscle_sore === "TRUE") },
-				{ "sore_throat": this.positive.filter(datum => datum.sore_throat === "TRUE") },
-				{ "cxr_impression": this.positive.filter(datum => datum.cxr_impression != "") }
-			]
+			var proprietaryObject = d3.csvParse(raw);
+			// STATE 3: detect schema of CSV object and add to columns
+			if ( JSON.stringify(proprietaryObject.columns) === CSVVersion0Columns ) {
+				this.processCSVVersion0(proprietaryObject)
+			}
 			iflog("Data.readCSV(): data processed")
 		} catch (err) {
 			iflog("Data.readCSV: data not processed: " + err)
@@ -50,24 +52,50 @@ class Data {
 			// Want to know what address there was an error for
 		}
 	}
+	
+	// processCSVVersion0 will convert the 4-6-20 CarbonHealth/Braid format to a uniform dataformat. Don't really think it matters if they're part of the class.
+	processCSVVersion0(raw) {
+		// BUG TODO, BIG OOF: this is a major hack. we should be adding to columns, but we are not.
+		var positive = raw.filter(datum => datum.covid19_test_results === "Positive")
+		this.totalPatients += positive.length;
+		this.columns = [
+			{ "dyspnea": positive.filter(datum => datum.dyspnea === "TRUE") },
+			{ "rhonchi": positive.filter(datum => datum.rhonchi === "TRUE") },
+			{ "wheezes": positive.filter(datum => datum.wheezes === "TRUE") },
+			{ "cough": positive.filter(datum => datum.cough === "TRUE") },
+			{ "cough_mild": positive.filter(datum => datum.cough_severity === "Mild") },
+			{ "cough_moderate": positive.filter(datum => datum.cough_severity === "Moderate") },
+			{ "cough_severe": positive.filter(datum => datum.cough_severity === "Severe") },
+			{ "fever": positive.filter(datum => datum.fever === "TRUE")  },
+			{ "sob": positive.filter(datum => datum.sob === "TRUE") },
+			{ "sob_mild": positive.filter(datum => datum.sob_severity === "Mild") },
+			{ "sob_moderate": positive.filter(datum => datum.sob_severity === "Moderate") },
+			{ "sob_severe": positive.filter(datum => datum.sob_severity === "Severe") },
+			{ "diarrhea": positive.filter(datum => datum.diarrhea === "TRUE") },
+			{ "fatigue": positive.filter(datum => datum.fatigue === "TRUE") },
+			{ "headache": positive.filter(datum => datum.headache === "TRUE") },
+			{ "loss_of_smell": positive.filter(datum => datum.loss_of_smell === "TRUE") },
+			{ "loss_of_taste": positive.filter(datum => datum.loss_of_taste === "TRUE") },
+			{ "runny_nose": positive.filter(datum => datum.runny_nose === "TRUE") },
+			{ "muscle_throat": positive.filter(datum => datum.muscle_sore === "TRUE") },
+			{ "sore_throat": positive.filter(datum => datum.sore_throat === "TRUE") },
+			{ "cxr_impression": positive.filter(datum => datum.cxr_impression != "") }
+		]
+		iflog("processCSVversion0(): begin processing")
+		return 
+	}
 
 	// writeTotals populates a graph with percentages. This function is really a place holder. We're probably going to be creating "views" based on filters. This is a TODO.
 	writeTotals(target, filters) {
-		var totalPatients = this.positive.length;
 		var columnsHeight = 100/this.columns.length;
 		var bar = d3.select('#bar-chart').selectAll('div')
 		bar = bar.data(this.columns)
 		bar = bar.enter()
 		bar = bar.append('div')
 		bar = bar.style('width', d => {
-				return (100 * (Object.values(d)[0].length / totalPatients) + 1) + "%";
+				return (100 * (Object.values(d)[0].length / this.totalPatients) + 1) + "%";
 			})  // should be responsive
 		bar = bar.style('height', columnsHeight + "%") // but could be responsive
 	}
 }
 
-// processCSVversion0 will convert the 4-6-20 CarbonHealth/Braid format to a uniform dataformat. Don't really think it matters if they're part of the class.
-function processCSVversion0(raw) {
-	iflog("processCSVversion0(): begin processing")
-	return d3.csvParse(raw);
-}
