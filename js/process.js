@@ -85,8 +85,21 @@ class Data {
 		return 
 	}
 
+	// writeMajorColumns creates a basic graph and legend. It would be nice to use D3's axes methods here, but they rely on SVG and given design constrains, div's make more sense.
+	writeMajorColumns() {
+		var canvas = document.getElementById("bar-chart");
+		this.columns.forEach( labelObject => {
+			var label = Object.keys(labelObject)[0];
+			var majorColumn = canvas.appendChild(document.createElement("div"));
+			majorColumn.className = "major-col-label";
+			majorColumn.innerHTML = label;
+			var dataContainer = canvas.appendChild(document.createElement("div"));
+			dataContainer.className = "data-container";
+			dataContainer.setAttribute("id", label + "-container");
+		});
+	}
 	// writeTotals populates a graph with percentages. This function is really a place holder. We're probably going to be creating "views" based on filters. This is a TODO.
-	// Not using any of it's arguments, filters would be used to create a view. target i guess would be bar0chart.
+	// Not using any of it's arguments, filters would be used to create a view. target i guess would be bar-chart.
 	writeTotals(target, filters) {
 		var columnsHeight = 100/this.columns.length;
 		var bar = d3.select('#bar-chart').selectAll('div');
