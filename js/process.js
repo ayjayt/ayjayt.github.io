@@ -89,14 +89,14 @@ class Data {
 	// Not using any of it's arguments, filters would be used to create a view. target i guess would be bar0chart.
 	writeTotals(target, filters) {
 		var columnsHeight = 100/this.columns.length;
-		var bar = d3.select('#bar-chart').selectAll('div')
-		bar = bar.data(this.columns)
-		bar = bar.enter()
-		bar = bar.append('div')
+		var bar = d3.select('#bar-chart').selectAll('div');
+		bar = bar.data(this.columns);
+		bar = bar.enter();
+		bar = bar.append('div');
 		bar = bar.style('width', d => {
 				return (100 * (Object.values(d)[0].length / this.totalPatients) + 1) + "%";
 			})  // should be responsive
-		bar = bar.style('height', columnsHeight + "%") // but could be responsive
+		bar = bar.style('height', columnsHeight + "%"); // but could be responsive
 	}
 }
 
