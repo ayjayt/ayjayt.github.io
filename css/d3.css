@@ -1,9 +1,12 @@
 #bar-chart {
 	height: 100%;
 	width: 100%;
+	display: grid;
+	grid-template: auto / auto 1fr;
 }
-#bar-chart div {
+#bar-chart .bar {
 	background-color: black;
 	border-bottom: 1px solid white;
-	color: lightblue;
+}
+#bar-chart .col-group {
 }
