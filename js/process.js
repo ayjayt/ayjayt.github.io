@@ -1,5 +1,6 @@
 // process.js detects csv type and converts the csv to a unified data format.
 // the unified data format is like a protocol buffer in that the schema can only grow.
+// This should be split into two objects, maybe... one is a data processor: Process. The other is a graph object, columns, but we're going to ignore that for now.
 
 // Checking column patterns is how we're determing schema right now
 const CSVVersion0Columns = JSON.stringify(["clinic_state", "test_name", "covid19_test_results", "age", "high_risk_exposure_occupation", "high_risk_interactions", "diabetes", "chd", "htn", "cancer", "asthma", "copd", "autoimmune_dis", "temperature", "pulse", "sys", "dia", "rr", "o2sat", "rapid_flu", "rapid_flu_result", "rapid_strep", "rapid_strep_result", "ctab", "dyspnea", "rhonchi", "wheezes", "cough", "cough_severity", "fever", "sob", "sob_severity", "diarrhea", "fatigue", "headache", "loss_of_smell", "loss_of_taste", "runny_nose", "muscle_sore", "sore_throat", "cxr_findings", "cxr_impression", "cxr_link"])
@@ -38,7 +39,6 @@ class Data {
 	// readCSV should detect a csv type and call the appropriate process function. 
 	readCSV(raw) {
 		iflog("detectAndProcess(): processing");
-		// Since there is only one format... we don't need to detect yet
 		try {
 			var proprietaryObject = d3.csvParse(raw);
 			// STATE 3: detect schema of CSV object and add to columns
@@ -49,7 +49,7 @@ class Data {
 		} catch (err) {
 			iflog("Data.readCSV: data not processed: " + err)
 			// STATE: Error, the data couldn't be processed or wasn't detected correctly
-			// Want to know what address there was an error for
+			// TODO: Want to know what address there was an error for, so the raw data string should probably be an object
 		}
 	}
 	
@@ -86,6 +86,7 @@ class Data {
 	}
 
 	// writeTotals populates a graph with percentages. This function is really a place holder. We're probably going to be creating "views" based on filters. This is a TODO.
+	// Not using any of it's arguments, filters would be used to create a view. target i guess would be bar0chart.
 	writeTotals(target, filters) {
 		var columnsHeight = 100/this.columns.length;
 		var bar = d3.select('#bar-chart').selectAll('div')
