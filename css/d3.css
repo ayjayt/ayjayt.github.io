@@ -5,10 +5,20 @@
 	margin-left:5px;
 	grid-template: auto / auto 1fr;
 }
-#bar-chart .bar {
-	background-color: black;
-	border-bottom: 1px solid white;
-}
+
 #bar-chart .major-col-label {
 	border-top: 1px solid black;
+}
+
+#bar-chart .filter-container {
+	height: 100%;
+	display: grid;
+	grid-template: auto / auto 1fr;
+}
+
+#bar-chart .bar {
+	background-color: black;
+	border-bottom: thin solid white;
+	height: 100%;
+	border-top:1px solid white;
 }
