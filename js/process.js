@@ -180,7 +180,7 @@ class Data {
 			label = label.text(filter.label);
 			var bar = row.append('div');
 			bar = bar.attr("class", "bar");
-			bar = row.style('width', d => {
+			bar = bar.style('width', d => {
 					return (100 * d.value / this.totalPatients) + "%";
 				});
 		});
