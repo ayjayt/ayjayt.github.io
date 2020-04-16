@@ -66,6 +66,8 @@ class Data {
 		// Could totally use the filter generator for this somehow.
 		// TODO furthermore we're overwriting data
 		// TODO we should just be adding data and then adjusting it.
+		// We should be conforming the column names to a schema if we need to be
+		// This way the filters can all be the same
 		// We are not transforming the rows though.
 		// We will have to manually translate all "keys" ie column names
 		// And then the filters here... are pretty basic
@@ -169,7 +171,7 @@ class Data {
 			// D3 tutorial suggests in the case of nested selectAlls, to attach data twice. So values[] on '.data-container' and (d) => { return [ d ]; } for 'div'
 			// But attaching data to '.data-container' doesn't make sense.
 			// Passing any type of an array back to just 'div' produced "undefined behavior"- you end up looping over the whole array within every '.data-container'.
-			// This hack accesses the particular value you want to attach and makes it an array.
+			// This function accesses the particular value you want to attach and makes it an array.
 			chart = chart.enter();
 			var row = chart.append('div');
 			row = row.attr("class", "filter-container");
