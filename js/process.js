@@ -32,7 +32,7 @@ class Data {
 			{ key: "loss_of_smell", data: [] },
 			{ key: "loss_of_taste", data: [] },
 			{ key: "runny_nose", data: [] },
-			{ key: "muscle_throat", data: [] },
+			{ key: "muscle_sore", data: [] },
 			{ key: "sore_throat", data: [] },
 			{ key: "cxr_impression", data: [] }
 		]
@@ -127,7 +127,7 @@ class Data {
 			else if (element.key === "runny_nose") {
 				this.rootData[i].data = positive.filter(datum => datum.runny_nose === "TRUE");
 			}
-			else if (element.key === "muscle_throat") {
+			else if (element.key === "muscle_sore") {
 				this.rootData[i].data = positive.filter(datum => datum.muscle_sore === "TRUE");
 			}
 			else if (element.key === "sore_throat") {
