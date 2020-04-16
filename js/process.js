@@ -164,7 +164,7 @@ class Data {
 
 			var chart = d3.select('#bar-chart').selectAll('.data-container');
 			chart = chart.selectAll('div'); 
-			chart = chart.data((d, i) => { return [ filter.values[i] ]; });
+			chart = chart.data((d, i) => { return [ filter.values[i] ]; }, (d) => { return d.row + "_" + filter.label; } );
 			// Engineering Note:
 			// D3 tutorial suggests in the case of nested selectAlls, to attach data twice. So values[] on '.data-container' and (d) => { return [ d ]; } for 'div'
 			// But attaching data to '.data-container' doesn't make sense.
