@@ -162,16 +162,14 @@ class Data {
 		filters.forEach( filter => {
 			this.prepareFilteredData(filter); // TODO: this probably wont happen here if we're rerendering EVERYTHING
 
-			// TODO/BUG: maybe have to write in the grid/div structure with vanilla javascript and then attach the data and modify the attribute	
 			var chart = d3.select('#bar-chart').selectAll('.data-container');
-			chart = chart.data(filter.values); // A key function didn't work here but did work for the leaf nodes (the second .data())
 			chart = chart.selectAll('div'); 
-			chart = chart.data( (d, i) => { return [ d ]; }, d => {
-				return d.row + "_" + filter.label;
-			}); 
-			// Note Since selectAll.selectAll returns a nested selection,
-			// D3 expects a [ [] ] to beind (and bound in layers).  Values is [ {} ], but above we wrap the {} in [].
-			// selectAll.select produced an entirely flat structure such that nodes were appended as siblings to selectAll.
+			chart = chart.data((d, i) => { return [ filter.values[i] ]; });
+			// Engineering Note:
+			// D3 tutorial suggests in the case of nested selectAlls, to attach data twice. So values[] on '.data-container' and (d) => { return [ d ]; } for 'div'
+			// But attaching data to '.data-container' doesn't make sense.
+			// Passing any type of an array back to just 'div' produced "undefined behavior"- you end up looping over the whole array within every '.data-container'.
+			// This hack accesses the particular value you want to attach and makes it an array.
 			chart = chart.enter();
 			var row = chart.append('div');
 			row = row.attr("class", "filter-container");
