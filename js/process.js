@@ -7,6 +7,11 @@ const CSVVersion0Columns = JSON.stringify(["clinic_state", "test_name", "covid19
 
 const CSVVersion04072020Columns = JSON.stringify(["date_published", "clinic_state", "test_name", "swab_type", "covid_19_test_results", "age", "high_risk_exposure_occupation", "high_risk_interactions", "diabetes", "chd", "htn", "cancer", "asthma", "copd", "autoimmune_dis", "temperature", "pulse", "sys", "dia", "rr", "sats", "rapid_flu", "rapid_flu_results", "rapid_strep", "rapid_strep_results", "ctab", "labored_respiration", "rhonchi", "wheezes", "cough", "cough_severity", "fever", "sob", "sob_severity", "diarrhea", "fatigue", "headache", "loss_of_smell", "loss_of_taste", "runny_nose", "muscle_sore", "sore_throat", "cxr_findings", "cxr_impression", "cxr_link"]);
 
+// sampleFiltered is an example filter func, to be used as a mock for the renderor. these will be generated dynamically.
+var sampleFiltered = [ { label: "All", filterFunc: (element) => { return true; }, filterMap: {}, values:[], sampleSize: 0 } ]
+// sampleFiltered2 is an example filter func, to be used as a mock for the renderor. these will be generated dynamically.
+var sampleFiltered2 = [ { label: ">60yo", filterFunc: (element) => { return element.age > 60; }, filterMap: {}, sampleSize: 0 } ]
+
 
 // Data class represents the ultimate schema.
 class Data {
@@ -62,11 +67,85 @@ class Data {
 		}
 	}
 	
+	// processCSVVersion04072020 will convert the 4-7-20 CarbonHealth/Braid format to a uniform dataformat. 
+	// this is supposed to be conforming data
+	processCSVVersion04072020(raw) {
+		this.positive = raw.filter(datum => datum.covid_19_test_results === "Positive")
+		this.totalPatients += this.positive.length;
+		this.rootData.forEach( (element, i) => {
+			if (element.key === "dyspnea") {
+				this.rootData[i].data = this.positive.filter(datum => datum.labored_respiration === "TRUE");
+			}
+			else if (element.key === "rhonchi") {
+				this.rootData[i].data = this.positive.filter(datum => datum.rhonchi === "TRUE");
+			}
+			else if (element.key === "wheezes") {
+				this.rootData[i].data = this.positive.filter(datum => datum.wheezes === "TRUE");
+			}
+			else if (element.key === "cough") {
+				this.rootData[i].data = this.positive.filter(datum => datum.cough === "TRUE");
+			}
+			else if (element.key === "cough_mild") {
+				this.rootData[i].data = this.positive.filter(datum => datum.cough_severity === "Mild");
+			}
+			else if (element.key === "cough_moderate") {
+				this.rootData[i].data = this.positive.filter(datum => datum.cough_severity === "Moderate");
+			}
+			else if (element.key === "cough_severe") {
+				this.rootData[i].data = this.positive.filter(datum => datum.cough_severity === "Severe");
+			}
+			else if (element.key === "fever") {
+				this.rootData[i].data = this.positive.filter(datum => datum.fever === "TRUE") ;
+			}
+			else if (element.key === "sob") {
+				this.rootData[i].data = this.positive.filter(datum => datum.sob === "TRUE");
+			}
+			else if (element.key === "sob_mild") {
+				this.rootData[i].data = this.positive.filter(datum => datum.sob_severity === "Mild");
+			}
+			else if (element.key === "sob_moderate") {
+				this.rootData[i].data = this.positive.filter(datum => datum.sob_severity === "Moderate");
+			}
+			else if (element.key === "sob_severe") {
+				this.rootData[i].data = this.positive.filter(datum => datum.sob_severity === "Severe");
+			}
+			else if (element.key === "diarrhea") {
+				this.rootData[i].data = this.positive.filter(datum => datum.diarrhea === "TRUE");
+			}
+			else if (element.key === "fatigue") {
+				this.rootData[i].data = this.positive.filter(datum => datum.fatigue === "TRUE");
+			}
+			else if (element.key === "headache") {
+				this.rootData[i].data = this.positive.filter(datum => datum.headache === "TRUE");
+			}
+			else if (element.key === "loss_of_smell") {
+				this.rootData[i].data = this.positive.filter(datum => datum.loss_of_smell === "TRUE");
+			}
+			else if (element.key === "loss_of_taste") {
+				this.rootData[i].data = this.positive.filter(datum => datum.loss_of_taste === "TRUE");
+			}
+			else if (element.key === "runny_nose") {
+				this.rootData[i].data = this.positive.filter(datum => datum.runny_nose === "TRUE");
+			}
+			else if (element.key === "muscle_sore") {
+				this.rootData[i].data = this.positive.filter(datum => datum.muscle_sore === "TRUE");
+			}
+			else if (element.key === "sore_throat") {
+				this.rootData[i].data = this.positive.filter(datum => datum.sore_throat === "TRUE");
+			}
+			else if (element.key === "cxr_impression") {
+				this.rootData[i].data = this.positive.filter(datum => datum.cxr_impression != "");
+			}
+		});
+		
+		iflog("processCSVversion0(): begin processing")
+		return 
+	}
 	// processCSVVersion0 will convert the 4-6-20 CarbonHealth/Braid format to a uniform dataformat. Don't really think it matters if they're part of the class.
 	// this is supposed to be conforming data
 	processCSVVersion0(raw) {
-		var positive = raw.filter(datum => datum.covid19_test_results === "Positive")
-		this.totalPatients += positive.length;
+		this.positive = raw.filter(datum => datum.covid19_test_results === "Positive")
+		this.totalPatients += this.positive.length;
 		// Would love to find a way to shorten this. TODO
 		// What we're doing is detecting which row we want and then employing a filter based on that colum.
 		// Could totally use the filter generator for this somehow.
@@ -157,6 +236,7 @@ class Data {
 	// TODO maybe add a hash to see if it's changed. Probably a filter object method.
 	prepareFilteredData(filter) {
 		filter.values = [];
+		filter.sampleSize = this.positive.filter(filter.filterFunc).length;
 		this.rootData.forEach((row, i) => {
 			filter.values.push({"row":row.key, "value": row.data.filter(filter.filterFunc).length });
 		});
@@ -175,7 +255,7 @@ class Data {
 			this.prepareFilteredData(filter); // TODO: this probably wont happen here if we're rerendering EVERYTHING
 
 			var chart = d3.select('#bar-chart').selectAll('.data-container');
-			chart = chart.selectAll('div'); 
+			chart = chart.selectAll('div .' + escape(filter.label) + "row"); 
 			chart = chart.data((d, i) => { return [ filter.values[i] ]; }, (d) => { return d.row + "_" + filter.label; } );
 			// Engineering Note:
 			// D3 tutorial suggests in the case of nested selectAlls, to attach data twice. So values[] on '.data-container' and (d) => { return [ d ]; } for 'div'
@@ -191,7 +271,7 @@ class Data {
 			var bar = row.append('div');
 			bar = bar.attr("class", "bar");
 			bar = bar.style('width', d => {
-					return (100 * d.value / this.totalPatients) + "%";
+					return (100 * d.value / filter.sampleSize) + "%";
 				});
 		});
 	}
