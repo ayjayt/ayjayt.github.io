@@ -6,7 +6,7 @@
 const CSVVersion0Columns = JSON.stringify(["clinic_state", "test_name", "covid19_test_results", "age", "high_risk_exposure_occupation", "high_risk_interactions", "diabetes", "chd", "htn", "cancer", "asthma", "copd", "autoimmune_dis", "temperature", "pulse", "sys", "dia", "rr", "o2sat", "rapid_flu", "rapid_flu_result", "rapid_strep", "rapid_strep_result", "ctab", "dyspnea", "rhonchi", "wheezes", "cough", "cough_severity", "fever", "sob", "sob_severity", "diarrhea", "fatigue", "headache", "loss_of_smell", "loss_of_taste", "runny_nose", "muscle_sore", "sore_throat", "cxr_findings", "cxr_impression", "cxr_link"])
 
 // sampleFilterFunc is an example filter func, to be used as a mock for the renderor. these will be generated dynamically.
-var sampleFiltered = [ { label: "All", filterFunc: (element) => { return element; }, filterMap: {}, values:[] } ]
+var sampleFiltered = [ { label: "All", filterFunc: (element) => { return true; }, filterMap: {}, values:[] } ]
 
 // Data class represents the ultimate schema.
 class Data {
