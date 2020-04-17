@@ -46,6 +46,7 @@ class Data {
 			var proprietaryObject = d3.csvParse(raw);
 			// STATE 3: detect schema of CSV object and add to columns
 			if ( JSON.stringify(proprietaryObject.columns) === CSVVersion0Columns ) {
+				iflog("Data.readCSV(): Detected Versio 0 CarbonBraid Schema")
 				this.processCSVVersion0(proprietaryObject)
 			} else {
 				iflog("Data.readCSV(): data is in unkown format");
@@ -160,6 +161,10 @@ class Data {
 	
 	// writeBarGraph is going to apply a filter to the data and create a new key-value pair where the value is an array of key value pairs
 	writeBarGraph(filters) {
+		if (this.totalPatients == 0) {
+			iflog("writeBarGraph(): exiting as length of data is 0");
+			return;
+		}
 		if (!Array.isArray(filters)) {
 			filters = [ filters ];
 		}

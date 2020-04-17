@@ -34,8 +34,10 @@ window.addEventListener("load", (event) => {
 			iflog("window.load(): " + address + " did not resolve properly.") 
 		})
 	})
-
-	Promise.all(remoteDataProm).finally( () => {
+	iflog("second promise");
+	Promise.all(remoteDataProm).catch( () => {
+		iflog("window.load(): at least one data retrieval failed")
+	}).finally( () => {
 		data.writeMajorColumns(); 
 		data.writeBarGraph(sampleFiltered);
 	});
