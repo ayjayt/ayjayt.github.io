@@ -2,7 +2,7 @@
 
 // List of datasources
 var DATAURLS = [ 
-	"https://raw.githubusercontent.com/mdcollab/covidclinicaldata/master/data/carbonhealth_and_braidhealth/4.6_carbonhealth_and_braidhealth.csv"
+	"https://raw.githubusercontent.com/mdcollab/covidclinicaldata/master/data/04-07_carbonhealth_and_braidhealth.csv"
 	];
 
 // LOGON is a global variable to turn verbose logging on

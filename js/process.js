@@ -47,6 +47,8 @@ class Data {
 			// STATE 3: detect schema of CSV object and add to columns
 			if ( JSON.stringify(proprietaryObject.columns) === CSVVersion0Columns ) {
 				this.processCSVVersion0(proprietaryObject)
+			} else {
+				iflog("Data.readCSV(): data is in unkown format");
 			}
 			iflog("Data.readCSV(): data processed")
 		} catch (err) {
@@ -72,7 +74,7 @@ class Data {
 		// We will have to manually translate all "keys" ie column names
 		// And then the filters here... are pretty basic
 		// only_dyspnea = 
-		// only)rhonci =
+		// only_rhonci =
 		// the rootData themselves should contain the "master filter"
 		this.rootData.forEach( (element, i) => {
 			if (element.key === "dyspnea") {
