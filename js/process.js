@@ -5,8 +5,8 @@
 // Checking column patterns is how we're determing schema right now
 const CSVVersion0Columns = JSON.stringify(["clinic_state", "test_name", "covid19_test_results", "age", "high_risk_exposure_occupation", "high_risk_interactions", "diabetes", "chd", "htn", "cancer", "asthma", "copd", "autoimmune_dis", "temperature", "pulse", "sys", "dia", "rr", "o2sat", "rapid_flu", "rapid_flu_result", "rapid_strep", "rapid_strep_result", "ctab", "dyspnea", "rhonchi", "wheezes", "cough", "cough_severity", "fever", "sob", "sob_severity", "diarrhea", "fatigue", "headache", "loss_of_smell", "loss_of_taste", "runny_nose", "muscle_sore", "sore_throat", "cxr_findings", "cxr_impression", "cxr_link"])
 
-// sampleFilterFunc is an example filter func, to be used as a mock for the renderor. these will be generated dynamically.
-var sampleFiltered = [ { label: "All", filterFunc: (element) => { return true; }, filterMap: {}, values:[] } ]
+const CSVVersion04072020Columns = JSON.stringify(["date_published", "clinic_state", "test_name", "swab_type", "covid_19_test_results", "age", "high_risk_exposure_occupation", "high_risk_interactions", "diabetes", "chd", "htn", "cancer", "asthma", "copd", "autoimmune_dis", "temperature", "pulse", "sys", "dia", "rr", "sats", "rapid_flu", "rapid_flu_results", "rapid_strep", "rapid_strep_results", "ctab", "labored_respiration", "rhonchi", "wheezes", "cough", "cough_severity", "fever", "sob", "sob_severity", "diarrhea", "fatigue", "headache", "loss_of_smell", "loss_of_taste", "runny_nose", "muscle_sore", "sore_throat", "cxr_findings", "cxr_impression", "cxr_link"]);
+
 
 // Data class represents the ultimate schema.
 class Data {
@@ -48,6 +48,9 @@ class Data {
 			if ( JSON.stringify(proprietaryObject.columns) === CSVVersion0Columns ) {
 				iflog("Data.readCSV(): Detected Versio 0 CarbonBraid Schema")
 				this.processCSVVersion0(proprietaryObject)
+			} else if ( JSON.stringify(proprietaryObject.columns) === CSVVersion04072020Columns ) {
+				iflog("Data.readCSV(): Detected 04072020 CarbonBraid Schema")
+				this.processCSVVersion04072020(proprietaryObject)
 			} else {
 				iflog("Data.readCSV(): data is in unkown format");
 			}
