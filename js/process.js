@@ -255,7 +255,7 @@ class Data {
 			this.prepareFilteredData(filter); // TODO: this probably wont happen here if we're rerendering EVERYTHING
 
 			var chart = d3.select('#bar-chart').selectAll('.data-container');
-			chart = chart.selectAll('div .' + escape(filter.label) + "row"); 
+			chart = chart.selectAll('div .' + CSS.escape(filter.label) + "row"); 
 			chart = chart.data((d, i) => { return [ filter.values[i] ]; }, (d) => { return d.row + "_" + filter.label; } );
 			// Engineering Note:
 			// D3 tutorial suggests in the case of nested selectAlls, to attach data twice. So values[] on '.data-container' and (d) => { return [ d ]; } for 'div'
@@ -263,12 +263,10 @@ class Data {
 			// Passing any type of an array back to just 'div' produced "undefined behavior"- you end up looping over the whole array within every '.data-container'.
 			// This function accesses the particular value you want to attach and makes it an array.
 			chart = chart.enter();
-			var row = chart.append('div');
-			row = row.attr("class", "filter-container");
-			var label = row.append('div');
+			var label = chart.append('div');
 			label = label.attr("class", "filter-label");
 			label = label.text(filter.label);
-			var bar = row.append('div');
+			var bar = chart.append('div');
 			bar = bar.attr("class", "bar");
 			bar = bar.style('width', d => {
 					return (100 * d.value / filter.sampleSize) + "%";

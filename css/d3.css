@@ -1,24 +1,30 @@
 #bar-chart {
-	height: 100%;
 	width: 100%;
 	display: grid;
 	margin-left:5px;
 	grid-template: auto / auto 1fr;
+	grid-row-gap: 1ex;
+	row-gap: 1ex;
+	grid-column-gap: 1ex;
+	column-gap: 1ex;
 }
 
 #bar-chart .major-col-label {
-	border-top: 1px solid black;
+	text-align: right;
+	align-self: center;
+
 }
 
-#bar-chart .filter-container {
-	height: 100%;
+#bar-chart .data-container {
 	display: grid;
 	grid-template: auto / auto 1fr;
+	grid-column-gap: 1ex;
+	column-gap: 1ex;
 }
-
+#bar-chart .filter-label {
+	text-align: right;
+}
 #bar-chart .bar {
 	background-color: black;
 	border-bottom: thin solid white;
-	height: 100%;
-	border-top:1px solid white;
 }
