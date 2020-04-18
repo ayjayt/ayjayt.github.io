@@ -12,7 +12,7 @@
 #bar-chart .major-col-label {
 	text-align: right;
 	align-self: center;
-	font-size: 24px;
+	font-size: 28px;
 }
 
 #bar-chart .data-container {
@@ -20,15 +20,33 @@
 	grid-template: auto / auto 1fr;
 	grid-column-gap: 1ex;
 	column-gap: 1ex;
+	background-color: white;
 }
 
 #bar-chart .data-container.odd{
-	background-color: #F6F6F6;
+	background-color: #F6F6F6; 
 }
 
 #bar-chart .filter-label {
+	font-weight: bold;
+	font-size: 20px;
 	text-align: right;
 }
 #bar-chart .bar {
 	border-bottom: thin solid white;
 }
+/* we put the content in after? sometimes its not really after. it feels like a hack */
+#bar-chart .bar span {
+	display: inline-block;
+	width: 100%;
+	font-weight: bold;
+	padding-left: 1px;
+	color:white;
+	text-shadow: 
+   -1px -1px 0 #000,  
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+     1px 1px 0 #000;
+	mix-blend-mode: difference;
+}
+

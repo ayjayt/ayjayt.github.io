@@ -270,13 +270,21 @@ class Data {
 			var label = chart.append('div');
 			label = label.attr("class", "filter-label " + filter.ID + "-row");
 			label = label.style("color", d3.schemeSet1[filter.colorIndex % 9]);
-			label = label.text(filter.label);
+			label = label.text(d => { return filter.label })
 			var bar = chart.append('div');
 			bar = bar.style("background-color", d3.schemeSet1[filter.colorIndex % 9]);
 			bar = bar.attr("class", "bar " + filter.ID +"-row");
 			bar = bar.style('width', d => {
-					return (100 * d.value / filter.sampleSize) + "%";
+					return (100 * (d.value) / filter.sampleSize) + "%";
 				});
+			var sp = bar.append("span");
+			var RGB = parseInt(d3.schemeSet1[filter.colorIndex % 9].slice(1), 16);
+			var R = 255 - ( RGB >> 16 )
+			var G = 255 - (( RGB >> 8) & 0xFF)
+			var B	= 255 - ( RGB & 0xFF )
+			var inverseColor = "#" + (((R << 16) + (G << 8) + (B)).toString(16));
+			sp = sp.style("color", inverseColor);
+			sp = sp.text(d => { return Math.round(10000 * (d.value) / filter.sampleSize)/100 + "%" } );
 		});
 	}
 
