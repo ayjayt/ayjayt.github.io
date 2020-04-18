@@ -291,12 +291,16 @@ class Data {
 		// NOTE: this is not using D3's API! Vanilla javascript!
 		var canvas = document.getElementById("bar-chart");
 		this.mainDomain.forEach( (labelObject, i) => {
+			var ifodd = "";
+			if ( (i % 2) == 1 ) {
+				ifodd= " odd";
+			} 
 			var label = labelObject.key;
 			var majorColumn = canvas.appendChild(document.createElement("div"));
-			majorColumn.className = "major-col-label";
+			majorColumn.className = "major-col-label" + ifodd;
 			majorColumn.innerHTML = label;
 			var dataContainer = canvas.appendChild(document.createElement("div"));
-			dataContainer.className = "data-container";
+			dataContainer.className = "data-container" + ifodd;
 			dataContainer.setAttribute("id", label + "-container");
 		});
 	}
