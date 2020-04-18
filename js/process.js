@@ -1,18 +1,12 @@
-// process.js detects csv type and converts the csv to a unified data format.
-// the unified data format is like a protocol buffer in that the schema can only grow.
-// This should be split into two objects, maybe... one is a data processor: Process. The other is a graph object, columns, but we're going to ignore that for now.
-
+// process.js declares a data object which is responsible for:
+// A) detecting CSV schema and conforming it to the data object
+// B) Applying filters to the data object
+// C) Rendering the data object
+// Factoring out the graph visual geometry from data is hard because of the Data.mainDomain.
 // Checking column patterns is how we're determing schema right now
 const CSVVersion0Columns = JSON.stringify(["clinic_state", "test_name", "covid19_test_results", "age", "high_risk_exposure_occupation", "high_risk_interactions", "diabetes", "chd", "htn", "cancer", "asthma", "copd", "autoimmune_dis", "temperature", "pulse", "sys", "dia", "rr", "o2sat", "rapid_flu", "rapid_flu_result", "rapid_strep", "rapid_strep_result", "ctab", "dyspnea", "rhonchi", "wheezes", "cough", "cough_severity", "fever", "sob", "sob_severity", "diarrhea", "fatigue", "headache", "loss_of_smell", "loss_of_taste", "runny_nose", "muscle_sore", "sore_throat", "cxr_findings", "cxr_impression", "cxr_link"])
 
 const CSVVersion04072020Columns = JSON.stringify(["date_published", "clinic_state", "test_name", "swab_type", "covid_19_test_results", "age", "high_risk_exposure_occupation", "high_risk_interactions", "diabetes", "chd", "htn", "cancer", "asthma", "copd", "autoimmune_dis", "temperature", "pulse", "sys", "dia", "rr", "sats", "rapid_flu", "rapid_flu_results", "rapid_strep", "rapid_strep_results", "ctab", "labored_respiration", "rhonchi", "wheezes", "cough", "cough_severity", "fever", "sob", "sob_severity", "diarrhea", "fatigue", "headache", "loss_of_smell", "loss_of_taste", "runny_nose", "muscle_sore", "sore_throat", "cxr_findings", "cxr_impression", "cxr_link"]);
-
-// sampleFiltered is an array of sample filter functions
-var sampleFiltered = [ 
-	{ ID: "i0", label: "All", filterFunc: (element) => { return true; }, filterMap: {}, values:[], sampleSize: 0 }, 
-	{ ID: "i1", label: ">60yo", filterFunc: (element) => { return element.age > 60; }, filterMap: {}, sampleSize: 0 }
-];
-
 
 // Data class represents the ultimate schema.
 class Data {
@@ -20,27 +14,27 @@ class Data {
 		// These are the dependent variables, basically. A lot of redundancy here.
 		this.totalPatients = 0;
 		this.mainDomain = [
-			{ key: "dyspnea", data: [] },
-			{ key: "rhonchi", data: [] },
-			{ key: "wheezes", data: [] },
-			{ key: "cough", data: [] },
-			{ key: "cough_mild", data: [] },
-			{ key: "cough_moderate", data: [] },
-			{ key: "cough_severe", data: [] },
-			{ key: "fever", data: [] },
-			{ key: "sob", data: [] },
-			{ key: "sob_mild", data: [] },
-			{ key: "sob_moderate", data: [] },
-			{ key: "sob_severe", data:[] },
-			{ key: "diarrhea", data: [] },
-			{ key: "fatigue", data: [] },
-			{ key: "headache", data: [] },
-			{ key: "loss_of_smell", data: [] },
-			{ key: "loss_of_taste", data: [] },
-			{ key: "runny_nose", data: [] },
-			{ key: "muscle_sore", data: [] },
-			{ key: "sore_throat", data: [] },
-			{ key: "cxr_impression", data: [] }
+			{ text: "Dyspnea", key: "dyspnea", data: [] },
+			{ text: "Rhonci", key: "rhonchi", data: [] },
+			{ text: "Wheezing", key: "wheezes", data: [] },
+			{ text: "Any Cough", key: "cough", data: [] },
+			{ text: "Mild Cough", key: "cough_mild", data: [] },
+			{ text: "Moderate Cough", key: "cough_moderate", data: [] },
+			{ text: "Severe Cough", key: "cough_severe", data: [] },
+			{ text: "Fever", key: "fever", data: [] },
+			{ text: "Any SOB", key: "sob", data: [] },
+			{ text: "Mild SOB", key: "sob_mild", data: [] },
+			{ text: "Moderate SOB", key: "sob_moderate", data: [] },
+			{ text: "Severe SOB", key: "sob_severe", data:[] },
+			{ text: "Diarrhea", key: "diarrhea", data: [] },
+			{ text: "Fatigue", key: "fatigue", data: [] },
+			{ text: "Headache", key: "headache", data: [] },
+			{ text: "Smell Loss", key: "loss_of_smell", data: [] },
+			{ text: "Taste Loss", key: "loss_of_taste", data: [] },
+			{ text: "Runny Nose", key: "runny_nose", data: [] },
+			{ text: "Sore Musc.", key: "muscle_sore", data: [] },
+			{ text: "Sore Throat", key: "sore_throat", data: [] },
+			{ text: "Img. Indicatation", key: "cxr_impression", data: [] }
 		]
 	}
 
@@ -275,10 +269,10 @@ class Data {
 			chart = chart.enter();
 			var label = chart.append('div');
 			label = label.attr("class", "filter-label " + filter.ID + "-row");
-			label = label.style("color", d3.schemeSet1[i % 9]);
+			label = label.style("color", d3.schemeSet1[filter.colorIndex % 9]);
 			label = label.text(filter.label);
 			var bar = chart.append('div');
-			bar = bar.style("background-color", d3.schemeSet1[i % 9]);
+			bar = bar.style("background-color", d3.schemeSet1[filter.colorIndex % 9]);
 			bar = bar.attr("class", "bar " + filter.ID +"-row");
 			bar = bar.style('width', d => {
 					return (100 * d.value / filter.sampleSize) + "%";
@@ -295,7 +289,7 @@ class Data {
 			if ( (i % 2) == 1 ) {
 				ifodd= " odd";
 			} 
-			var label = labelObject.key;
+			var label = labelObject.text;
 			var majorColumn = canvas.appendChild(document.createElement("div"));
 			majorColumn.className = "major-col-label" + ifodd;
 			majorColumn.innerHTML = label;
