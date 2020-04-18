@@ -33,20 +33,15 @@
 	text-align: right;
 }
 #bar-chart .bar {
+	line-height: 1.5em;
 	border-bottom: thin solid white;
-}
-/* we put the content in after? sometimes its not really after. it feels like a hack */
-#bar-chart .bar span {
-	display: inline-block;
-	width: 100%;
 	font-weight: bold;
 	padding-left: 1px;
 	color:white;
 	text-shadow: 
    -1px -1px 0 #000,  
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-     1px 1px 0 #000;
-	mix-blend-mode: difference;
+   1px -1px 0 #000,
+   -1px 1px 0 #000,
+   1px 1px 0 #000;
 }
 

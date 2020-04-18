@@ -277,14 +277,7 @@ class Data {
 			bar = bar.style('width', d => {
 					return (100 * (d.value) / filter.sampleSize) + "%";
 				});
-			var sp = bar.append("span");
-			var RGB = parseInt(d3.schemeSet1[filter.colorIndex % 9].slice(1), 16);
-			var R = 255 - ( RGB >> 16 )
-			var G = 255 - (( RGB >> 8) & 0xFF)
-			var B	= 255 - ( RGB & 0xFF )
-			var inverseColor = "#" + (((R << 16) + (G << 8) + (B)).toString(16));
-			sp = sp.style("color", inverseColor);
-			sp = sp.text(d => { return Math.round(10000 * (d.value) / filter.sampleSize)/100 + "%" } );
+			bar = bar.text(d => { return Math.round(10000 * (d.value) / filter.sampleSize)/100 + "%" } );
 		});
 	}
 
