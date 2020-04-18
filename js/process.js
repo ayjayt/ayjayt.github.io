@@ -9,8 +9,8 @@ const CSVVersion04072020Columns = JSON.stringify(["date_published", "clinic_stat
 
 // sampleFiltered is an array of sample filter functions
 var sampleFiltered = [ 
-	{ label: "All", filterFunc: (element) => { return true; }, filterMap: {}, values:[], sampleSize: 0 }, 
-	{ label: ">60yo", filterFunc: (element) => { return element.age > 60; }, filterMap: {}, sampleSize: 0 }
+	{ ID: "i0", label: "All", filterFunc: (element) => { return true; }, filterMap: {}, values:[], sampleSize: 0 }, 
+	{ ID: "i1", label: ">60yo", filterFunc: (element) => { return element.age > 60; }, filterMap: {}, sampleSize: 0 }
 ];
 
 
@@ -240,7 +240,10 @@ class Data {
 			filter.values.push({"row":row.key, "value": row.data.filter(filter.filterFunc).length });
 		});
 	}
-	
+	// removeMajorRow manually removes an entire category. While _technically_ we're removing data, which you'd use D3.remove() for, we're more accurately removing an entire visualization.
+	removeMajorRow(filterID) {
+		document.querySelectorAll("." + filterID + "-row").forEach( (el) => { return el.remove(); });
+	}
 	// writeBarGraph is going to apply a filter to the data and create a new key-value pair where the value is an array of key value pairs
 	writeBarGraph(filters) {
 		if (this.totalPatients == 0) {
@@ -254,8 +257,8 @@ class Data {
 			this.prepareFilteredData(filter); // TODO: this probably wont happen here if we're rerendering EVERYTHING
 
 			var chart = d3.select('#bar-chart').selectAll('.data-container');
-			chart = chart.selectAll('div .i' + i + "-row"); 
-			chart = chart.data((d, i) => { return [ filter.values[i] ]; }, (d) => { return d.row + "_" + i; } );
+			chart = chart.selectAll('div .' + filter.ID + "-row"); 
+			chart = chart.data((d, i) => { return [ filter.values[i] ]; }, (d) => { return d.row + "_" + filter.ID; } );
 			// Engineering Note:
 			// D3 tutorial suggests in the case of nested selectAlls, to attach data twice. So values[] on '.data-container' and (d) => { return [ d ]; } for 'div'
 			// But attaching data to '.data-container' doesn't make sense.
@@ -271,12 +274,12 @@ class Data {
 			iflog(chart.exit());
 			chart = chart.enter();
 			var label = chart.append('div');
-			label = label.attr("class", "filter-label i" + i + "-row");
+			label = label.attr("class", "filter-label " + filter.ID + "-row");
 			label = label.style("color", d3.schemeSet1[i % 9]);
 			label = label.text(filter.label);
 			var bar = chart.append('div');
 			bar = bar.style("background-color", d3.schemeSet1[i % 9]);
-			bar = bar.attr("class", "bar i" + i +"-row");
+			bar = bar.attr("class", "bar " + filter.ID +"-row");
 			bar = bar.style('width', d => {
 					return (100 * d.value / filter.sampleSize) + "%";
 				});
@@ -287,7 +290,7 @@ class Data {
 	writeMajorColumns() {
 		// NOTE: this is not using D3's API! Vanilla javascript!
 		var canvas = document.getElementById("bar-chart");
-		this.mainDomain.forEach( labelObject => {
+		this.mainDomain.forEach( (labelObject, i) => {
 			var label = labelObject.key;
 			var majorColumn = canvas.appendChild(document.createElement("div"));
 			majorColumn.className = "major-col-label";
