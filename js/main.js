@@ -40,6 +40,5 @@ window.addEventListener("load", (event) => {
 	}).finally( () => {
 		data.writeMajorColumns(); 
 		data.writeBarGraph(sampleFiltered);
-		data.writeBarGraph(sampleFiltered2);
 	});
 })

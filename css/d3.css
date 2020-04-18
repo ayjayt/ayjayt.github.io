@@ -12,6 +12,7 @@
 #bar-chart .major-col-label {
 	text-align: right;
 	align-self: center;
+	font-size: 24px;
 
 }
 
@@ -25,6 +26,5 @@
 	text-align: right;
 }
 #bar-chart .bar {
-	background-color: black;
 	border-bottom: thin solid white;
 }

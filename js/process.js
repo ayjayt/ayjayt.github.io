@@ -7,10 +7,11 @@ const CSVVersion0Columns = JSON.stringify(["clinic_state", "test_name", "covid19
 
 const CSVVersion04072020Columns = JSON.stringify(["date_published", "clinic_state", "test_name", "swab_type", "covid_19_test_results", "age", "high_risk_exposure_occupation", "high_risk_interactions", "diabetes", "chd", "htn", "cancer", "asthma", "copd", "autoimmune_dis", "temperature", "pulse", "sys", "dia", "rr", "sats", "rapid_flu", "rapid_flu_results", "rapid_strep", "rapid_strep_results", "ctab", "labored_respiration", "rhonchi", "wheezes", "cough", "cough_severity", "fever", "sob", "sob_severity", "diarrhea", "fatigue", "headache", "loss_of_smell", "loss_of_taste", "runny_nose", "muscle_sore", "sore_throat", "cxr_findings", "cxr_impression", "cxr_link"]);
 
-// sampleFiltered is an example filter func, to be used as a mock for the renderor. these will be generated dynamically.
-var sampleFiltered = [ { label: "All", filterFunc: (element) => { return true; }, filterMap: {}, values:[], sampleSize: 0 } ]
-// sampleFiltered2 is an example filter func, to be used as a mock for the renderor. these will be generated dynamically.
-var sampleFiltered2 = [ { label: ">60yo", filterFunc: (element) => { return element.age > 60; }, filterMap: {}, sampleSize: 0 } ]
+// sampleFiltered is an array of sample filter functions
+var sampleFiltered = [ 
+	{ label: "All", filterFunc: (element) => { return true; }, filterMap: {}, values:[], sampleSize: 0 }, 
+	{ label: ">60yo", filterFunc: (element) => { return element.age > 60; }, filterMap: {}, sampleSize: 0 }
+];
 
 
 // Data class represents the ultimate schema.
@@ -230,8 +231,6 @@ class Data {
 	}
 
 
-	// filterMapToFunc(). probably a filter object method.
-	
 	// prepareFilteredData will use filterFunc on each row of rootData and populate the values member of the filter
 	// TODO maybe add a hash to see if it's changed. Probably a filter object method.
 	prepareFilteredData(filter) {
@@ -251,7 +250,7 @@ class Data {
 		if (!Array.isArray(filters)) {
 			filters = [ filters ];
 		}
-		filters.forEach( filter => {
+		filters.forEach( (filter, i) => {
 			this.prepareFilteredData(filter); // TODO: this probably wont happen here if we're rerendering EVERYTHING
 
 			var chart = d3.select('#bar-chart').selectAll('.data-container');
@@ -265,8 +264,10 @@ class Data {
 			chart = chart.enter();
 			var label = chart.append('div');
 			label = label.attr("class", "filter-label");
+			label = label.style("color", d3.schemeSet1[i % 9]);
 			label = label.text(filter.label);
 			var bar = chart.append('div');
+			bar = bar.style("background-color", d3.schemeSet1[i % 9]);
 			bar = bar.attr("class", "bar");
 			bar = bar.style('width', d => {
 					return (100 * d.value / filter.sampleSize) + "%";
