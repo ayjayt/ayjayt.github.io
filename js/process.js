@@ -254,8 +254,9 @@ class Data {
 			this.prepareFilteredData(filter); // TODO: this probably wont happen here if we're rerendering EVERYTHING
 
 			var chart = d3.select('#bar-chart').selectAll('.data-container');
-			chart = chart.selectAll('div .' + CSS.escape(filter.label) + "row"); 
-			chart = chart.data((d, i) => { return [ filter.values[i] ]; }, (d) => { return d.row + "_" + filter.label; } );
+			chart = chart.selectAll('div .i' + i + "-row"); 
+			// OMG the data is bound to two nodes
+			chart = chart.data((d, i) => { return [ filter.values[i] ]; }, (d) => { return d.row + "_" + i; } );
 			// Engineering Note:
 			// D3 tutorial suggests in the case of nested selectAlls, to attach data twice. So values[] on '.data-container' and (d) => { return [ d ]; } for 'div'
 			// But attaching data to '.data-container' doesn't make sense.
@@ -271,12 +272,12 @@ class Data {
 			iflog(chart.exit());
 			chart = chart.enter();
 			var label = chart.append('div');
-			label = label.attr("class", "filter-label");
+			label = label.attr("class", "filter-label i" + i + "-row");
 			label = label.style("color", d3.schemeSet1[i % 9]);
 			label = label.text(filter.label);
 			var bar = chart.append('div');
 			bar = bar.style("background-color", d3.schemeSet1[i % 9]);
-			bar = bar.attr("class", "bar");
+			bar = bar.attr("class", "bar i" + i +"-row");
 			bar = bar.style('width', d => {
 					return (100 * d.value / filter.sampleSize) + "%";
 				});
