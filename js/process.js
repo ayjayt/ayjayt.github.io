@@ -69,67 +69,67 @@ class Data {
 		this.totalPatients += this.positivePatients.length;
 		this.mainDomain.forEach( (element, i) => {
 			if (element.key === "dyspnea") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.labored_respiration === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.labored_respiration === "TRUE"));
 			}
 			else if (element.key === "rhonchi") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.rhonchi === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.rhonchi === "TRUE"));
 			}
 			else if (element.key === "wheezes") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.wheezes === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.wheezes === "TRUE"));
 			}
 			else if (element.key === "cough") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.cough === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.cough === "TRUE"));
 			}
 			else if (element.key === "cough_mild") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.cough_severity === "Mild");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.cough_severity === "Mild"));
 			}
 			else if (element.key === "cough_moderate") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.cough_severity === "Moderate");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.cough_severity === "Moderate"));
 			}
 			else if (element.key === "cough_severe") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.cough_severity === "Severe");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.cough_severity === "Severe"));
 			}
 			else if (element.key === "fever") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.fever === "TRUE") ;
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.fever === "TRUE")) ;
 			}
 			else if (element.key === "sob") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.sob === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.sob === "TRUE"));
 			}
 			else if (element.key === "sob_mild") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.sob_severity === "Mild");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.sob_severity === "Mild"));
 			}
 			else if (element.key === "sob_moderate") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.sob_severity === "Moderate");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.sob_severity === "Moderate"));
 			}
 			else if (element.key === "sob_severe") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.sob_severity === "Severe");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.sob_severity === "Severe"));
 			}
 			else if (element.key === "diarrhea") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.diarrhea === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.diarrhea === "TRUE"));
 			}
 			else if (element.key === "fatigue") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.fatigue === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.fatigue === "TRUE"));
 			}
 			else if (element.key === "headache") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.headache === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.headache === "TRUE"));
 			}
 			else if (element.key === "loss_of_smell") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.loss_of_smell === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.loss_of_smell === "TRUE"));
 			}
 			else if (element.key === "loss_of_taste") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.loss_of_taste === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.loss_of_taste === "TRUE"));
 			}
 			else if (element.key === "runny_nose") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.runny_nose === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.runny_nose === "TRUE"));
 			}
 			else if (element.key === "muscle_sore") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.muscle_sore === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.muscle_sore === "TRUE"));
 			}
 			else if (element.key === "sore_throat") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.sore_throat === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.sore_throat === "TRUE"));
 			}
 			else if (element.key === "cxr_impression") {
-				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.cxr_impression != "");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.cxr_impression != ""));
 			}
 		});
 		
@@ -156,67 +156,67 @@ class Data {
 		// the mainDomain themselves should contain the "master filter"
 		this.mainDomain.forEach( (element, i) => {
 			if (element.key === "dyspnea") {
-				this.mainDomain[i].data = positive.filter(datum => datum.dyspnea === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.dyspnea === "TRUE"));
 			}
 			else if (element.key === "rhonchi") {
-				this.mainDomain[i].data = positive.filter(datum => datum.rhonchi === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.rhonchi === "TRUE"));
 			}
 			else if (element.key === "wheezes") {
-				this.mainDomain[i].data = positive.filter(datum => datum.wheezes === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.wheezes === "TRUE"));
 			}
 			else if (element.key === "cough") {
-				this.mainDomain[i].data = positive.filter(datum => datum.cough === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.cough === "TRUE"));
 			}
 			else if (element.key === "cough_mild") {
-				this.mainDomain[i].data = positive.filter(datum => datum.cough_severity === "Mild");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.cough_severity === "Mild"));
 			}
 			else if (element.key === "cough_moderate") {
-				this.mainDomain[i].data = positive.filter(datum => datum.cough_severity === "Moderate");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.cough_severity === "Moderate"));
 			}
 			else if (element.key === "cough_severe") {
-				this.mainDomain[i].data = positive.filter(datum => datum.cough_severity === "Severe");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.cough_severity === "Severe"));
 			}
 			else if (element.key === "fever") {
-				this.mainDomain[i].data = positive.filter(datum => datum.fever === "TRUE") ;
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.fever === "TRUE")) ;
 			}
 			else if (element.key === "sob") {
-				this.mainDomain[i].data = positive.filter(datum => datum.sob === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.sob === "TRUE"));
 			}
 			else if (element.key === "sob_mild") {
-				this.mainDomain[i].data = positive.filter(datum => datum.sob_severity === "Mild");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.sob_severity === "Mild"));
 			}
 			else if (element.key === "sob_moderate") {
-				this.mainDomain[i].data = positive.filter(datum => datum.sob_severity === "Moderate");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.sob_severity === "Moderate"));
 			}
 			else if (element.key === "sob_severe") {
-				this.mainDomain[i].data = positive.filter(datum => datum.sob_severity === "Severe");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.sob_severity === "Severe"));
 			}
 			else if (element.key === "diarrhea") {
-				this.mainDomain[i].data = positive.filter(datum => datum.diarrhea === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.diarrhea === "TRUE"));
 			}
 			else if (element.key === "fatigue") {
-				this.mainDomain[i].data = positive.filter(datum => datum.fatigue === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.fatigue === "TRUE"));
 			}
 			else if (element.key === "headache") {
-				this.mainDomain[i].data = positive.filter(datum => datum.headache === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.headache === "TRUE"));
 			}
 			else if (element.key === "loss_of_smell") {
-				this.mainDomain[i].data = positive.filter(datum => datum.loss_of_smell === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.loss_of_smell === "TRUE"));
 			}
 			else if (element.key === "loss_of_taste") {
-				this.mainDomain[i].data = positive.filter(datum => datum.loss_of_taste === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.loss_of_taste === "TRUE"));
 			}
 			else if (element.key === "runny_nose") {
-				this.mainDomain[i].data = positive.filter(datum => datum.runny_nose === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.runny_nose === "TRUE"));
 			}
 			else if (element.key === "muscle_sore") {
-				this.mainDomain[i].data = positive.filter(datum => datum.muscle_sore === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.muscle_sore === "TRUE"));
 			}
 			else if (element.key === "sore_throat") {
-				this.mainDomain[i].data = positive.filter(datum => datum.sore_throat === "TRUE");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.sore_throat === "TRUE"));
 			}
 			else if (element.key === "cxr_impression") {
-				this.mainDomain[i].data = positive.filter(datum => datum.cxr_impression != "");
+				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.cxr_impression != ""));
 			}
 		});
 		
