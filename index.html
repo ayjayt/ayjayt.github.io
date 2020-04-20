@@ -18,6 +18,63 @@
 	<h3>with custom filters and comparisons</h3>
 	<br>
 	<div id="bar-chart"></div>
+	<br>
+	<div id="filter-form">
+		<div id="filter-list-container">
+			<select id="filter-list" size=15>	
+				<option>Sample</option>
+				<option>Sample</option>
+			</select>
+			<br>
+			<button type=submit>Edit</button>
+			<button type=button>Delete</button>
+		</div>
+		<div id="filter-gen-container">
+			<form id="filter-gen">
+				<div>
+					Minimum Age: <input size=5 type=text>
+					Maximum Age: <input size=5 type=text>
+				</div>
+				<div>
+					<h3>Patient must present with these Comorbidities:</h3>
+					<br>
+					<div class=checklist>
+						<div><input type=checkbox />Diabetes</div>
+						<div><input type=checkbox />Congestive Heart Disease</div>
+						<div><input type=checkbox />Hypertension</div>
+						<div><input type=checkbox />Cancer</div>
+						<div><input type=checkbox />Asthma</div>
+						<div><input type=checkbox />COPD</div>
+						<div><input type=checkbox />Autoimmune Disorder</div>
+					</div>
+				</div>
+				<div>
+					<h3>Patient must present with these symptoms:</h3>
+					<br>
+					<div class=checklist>
+						<div><input type=checkbox />Dyspnea</div>
+						<div><input type=checkbox />Wheezes</div>
+						<div><input type=checkbox />Cough</div>
+						<div><input type=checkbox />Fever</div>
+						<div><input type=checkbox />SOB</div>
+						<div><input type=checkbox />Diarrhea</div>
+						<div><input type=checkbox />Fatigue</div>
+						<div><input type=checkbox />Headache</div>
+						<div><input type=checkbox />Loss of Smell</div>
+						<div><input type=checkbox />Loss of Taste</div>
+						<div><input type=checkbox />Runny Nose</div>
+						<div><input type=checkbox />Sore Muscles</div>
+						<div><input type=checkbox />Sore Throat</div>
+						<div><input type=checkbox />Indications</div>
+					</div>
+				</div>
+				<div>
+					<button type=submit>Add/Update</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
 	<script src="js/d3.js"></script>
 	<script src="js/d3-dsv.js"></script>
   <script src="js/retrieve.js"></script>

@@ -72,5 +72,5 @@ class Filter {
 // sampleFiltered is an array of sample filter objects for testing
 var sampleFiltered = [
 	new Filter("All", [], 0),
-	new Filter(">60yo", [new FilterMap("age", ">", 60)], 1)
+	new Filter(">45yo", [new FilterMap("age", ">", 45)], 1)
 ];
