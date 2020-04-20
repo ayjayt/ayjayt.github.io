@@ -8,6 +8,14 @@ function uuidv4() {
   );
 }
 
+class FilterMap {
+	constructor(key, operator, value) {
+		this.key = key;
+		this.op = operator;
+		this.val = value;
+	}
+}
+
 // Filter is basically a class that takes a data object and produces a summary based on the specified filters. It renders itself to the graph.
 class Filter {
 	constructor(label, filterMap, colorIndex) {
@@ -19,16 +27,50 @@ class Filter {
 		this.values = [];
 		this.sampleSize = 0;
 	}
+
+	// filterFunc runs the filterMap. 
+	// TODO: It could use generated and stored functions, which would be faster.
+	filterFunc(elem) {
+		for (let i = 0; i < this.filterMap.length; i ++) {
+			if (this.filterMap[i].op === "==") {
+				if ( elem[this.filterMap[i].key] == this.filterMap[i].val ) {
+				} else {
+					return false;
+				}
+			} else if (this.filterMap[i].op === "!=") {
+				if ( elem[this.filterMap[i].key] != this.filterMap[i].val ) {
+				} else {
+					return false;
+				}
+			} else if (this.filterMap[i].op === ">") {
+				if ( elem[this.filterMap[i].key] > this.filterMap[i].val ) {
+				} else {
+					return false;
+				}
+			} else if (this.filterMap[i].op === "<") {
+				if ( elem[this.filterMap[i].key] < this.filterMap[i].val ) {
+				} else {
+					return false;
+				}
+			} else if (this.filterMap[i].op === ">=") {
+				if ( elem[this.filterMap[i].key] >= this.filterMap[i].val ) {
+				} else {
+					return false;
+				}
+			} else if (this.filterMap[i].op === "<=") {
+				if ( elem[this.filterMap[i].key] <= this.filterMap[i].val ) {
+				} else {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 }
 
 
 // sampleFiltered is an array of sample filter objects for testing
 var sampleFiltered = [
-	new Filter("All", {}, 0),
-	new Filter(">60yo", {}, 1)
+	new Filter("All", [], 0),
+	new Filter(">60yo", [new FilterMap("age", ">", 60)], 1)
 ];
-
-
-// We're creating the two filter functions from scratch because we can't build them from strings yet.
-sampleFiltered[0].filterFunc = (el) => { return true; };
-sampleFiltered[1].filterFunc = (el) => { return el.age > 60; };

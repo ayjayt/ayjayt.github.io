@@ -141,19 +141,8 @@ class Data {
 	processCSVVersion0(raw) {
 		this.positivePatients = raw.filter(datum => datum.covid19_test_results === "Positive")
 		this.totalPatients += this.positivePatients.length;
-		// Would love to find a way to shorten this. TODO
-		// What we're doing is detecting which row we want and then employing a filter based on that colum.
-		// Could totally use the filter generator for this somehow.
-		// TODO furthermore we're overwriting data
-		// TODO we should just be adding data and then adjusting it.
-		// We should be conforming the column names to a schema if we need to be
-		// This way the filters can all be the same
-		// We are not transforming the rows though.
-		// We will have to manually translate all "keys" ie column names
-		// And then the filters here... are pretty basic
-		// only_dyspnea = 
-		// only_rhonci =
-		// the mainDomain themselves should contain the "master filter"
+		// TODO: we should conform the rows (maybe modify CSV string directly?)
+		// Then we can just do this once, basically, and probably use a loop with a list of FilterMaps or something like it
 		this.mainDomain.forEach( (element, i) => {
 			if (element.key === "dyspnea") {
 				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.dyspnea === "TRUE"));
@@ -230,9 +219,9 @@ class Data {
 	prepareFilteredData(filter) {
 		// STATE 8: use filters to calculate bar graph values
 		filter.values = [];
-		filter.sampleSize = this.positivePatients.filter(filter.filterFunc).length;
+		filter.sampleSize = this.positivePatients.filter(datum => filter.filterFunc(datum)).length;
 		this.mainDomain.forEach((row, i) => {
-			filter.values.push({"row":row.key, "value": row.data.filter(filter.filterFunc).length });
+			filter.values.push({"row":row.key, "value": row.data.filter(datum => filter.filterFunc(datum)).length });
 		});
 	}
 	// removeMajorRow manually removes an entire category. While _technically_ we're removing data, which you'd use D3.remove() for, we're more accurately removing an entire visualization.
