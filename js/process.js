@@ -44,7 +44,7 @@ class Data {
 		iflog("detectAndProcess(): processing");
 		try {
 			var proprietaryObject = d3.csvParse(raw);
-			// STATE 3: detect schema of CSV object and add to columns
+			// STATE 5: detect schema of CSV object and add to columns
 			if ( JSON.stringify(proprietaryObject.columns) === CSVVersion0Columns ) {
 				iflog("Data.readCSV(): Detected Versio 0 CarbonBraid Schema")
 				this.processCSVVersion0(proprietaryObject)
@@ -228,6 +228,7 @@ class Data {
 	// prepareFilteredData will use filterFunc on each row of mainDomain and populate the values member of the filter
 	// TODO maybe add a hash to see if it's changed. Probably a filter object method.
 	prepareFilteredData(filter) {
+		// STATE 8: use filters to calculate bar graph values
 		filter.values = [];
 		filter.sampleSize = this.positivePatients.filter(filter.filterFunc).length;
 		this.mainDomain.forEach((row, i) => {
@@ -250,6 +251,7 @@ class Data {
 		filters.forEach( (filter, i) => {
 			this.prepareFilteredData(filter); // TODO: this probably wont happen here if we're rerendering EVERYTHING
 
+			// STATE 9: Render filters
 			var chart = d3.select('#bar-chart').selectAll('.data-container');
 			chart = chart.selectAll('div .' + filter.ID + "-row"); 
 			chart = chart.data((d, i) => { return [ filter.values[i] ]; }, (d) => { return d.row + "_" + filter.ID; } );

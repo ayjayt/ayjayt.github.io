@@ -27,6 +27,8 @@ var sampleFiltered = [
 	new Filter("All", {}, 0),
 	new Filter(">60yo", {}, 1)
 ];
-	// We're creating the two filter functions from scratch because we can't build them from strings yet.
-	sampleFiltered[0].filterFunc = (el) => { return true; };
-	sampleFiltered[1].filterFunc = (el) => {return el.age > 60; };
+
+
+// We're creating the two filter functions from scratch because we can't build them from strings yet.
+sampleFiltered[0].filterFunc = (el) => { return true; };
+sampleFiltered[1].filterFunc = (el) => { return el.age > 60; };

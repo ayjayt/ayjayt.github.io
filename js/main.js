@@ -27,18 +27,21 @@ window.addEventListener("load", (event) => {
 	var remoteDataProm = DATAURLS.map(retrieveData);
 
 	remoteDataProm.forEach((promise) => {
-		// Note: can't pass the class method directly because promise strips it from it's class instance >:O
-		// So it's passed as a lambda
+		// STATE 4: Processing received data. Stuff could be happening in parallel.
+		// NOTE: can't pass the class method directly because promise strips it from it's class instance >:O
 		promise.then(raw => data.readCSV(raw)).catch(address => { 
 			// STATE: Error, address failed
 			iflog("window.load(): " + address + " did not resolve properly.") 
 		})
+		// TODO: You could easily do a loading screen here. You could use fetch's partial load to make it easier.
 	})
-	iflog("second promise");
+	
 	Promise.all(remoteDataProm).catch( () => {
 		iflog("window.load(): at least one data retrieval failed")
 	}).finally( () => {
+		// STATE 6: Render chart structure
 		data.writeMajorColumns(); 
+		// STATE 7: Render actual bar graph
 		data.writeBarGraph(sampleFiltered);
 	});
 })
