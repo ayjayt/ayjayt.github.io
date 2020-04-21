@@ -6,8 +6,11 @@
 
   <title>Covid Data Viz</title>
   <meta name="description" content="Covid Data Viz">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="ajpikul@gmail.com">
 
+	<!-- we're using pure here just for the form prettyness -->
+	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/d3.css">
 
@@ -21,56 +24,72 @@
 	<br>
 	<div id="filter-form">
 		<div id="filter-list-container">
-			<select id="filter-list" size=15>	
-				<option>Sample</option>
-				<option>Sample</option>
-			</select>
-			<br>
-			<button type=submit>Edit</button>
-			<button type=button>Delete</button>
+			<form class="pure-form">
+				<fieldset>
+					<h1><legend>Filter List</legend></h1>
+					<label for="filter-list">
+						<select name="filter-list" id="filter-list" size=15>	
+							<option>Sample</option>
+							<option>Sample</option>
+						</select>
+					</label>
+					<div>
+						<button type=submit class="pure-button pure-button-primary">Edit</button>
+						<button type=button class="pure-button button-warning">Delete</button>
+					</div>
+				</fieldset>
+			</form>
 		</div>
 		<div id="filter-gen-container">
-			<form id="filter-gen">
-				<div>
-					Minimum Age: <input size=5 type=text>
-					Maximum Age: <input size=5 type=text>
-				</div>
-				<div>
-					<h3>Patient must present with these Comorbidities:</h3>
-					<br>
-					<div class=checklist>
-						<div><input type=checkbox />Diabetes</div>
-						<div><input type=checkbox />Congestive Heart Disease</div>
-						<div><input type=checkbox />Hypertension</div>
-						<div><input type=checkbox />Cancer</div>
-						<div><input type=checkbox />Asthma</div>
-						<div><input type=checkbox />COPD</div>
-						<div><input type=checkbox />Autoimmune Disorder</div>
+			<form id="filter-gen" class="pure-form">
+				<fieldset>
+					<h1><legend>Filter Buidler</legend></h1>
+					<div class="age-inputs">
+						<label for="minimum age">
+							Minimum Age: <input type=number name="min-age" id="min-age">
+						</label>
+						<label for="maximum age">
+							Maximum Age: <input type=number name="max-age" id="max-age">
+						</label>
 					</div>
-				</div>
-				<div>
-					<h3>Patient must present with these symptoms:</h3>
-					<br>
-					<div class=checklist>
-						<div><input type=checkbox />Dyspnea</div>
-						<div><input type=checkbox />Wheezes</div>
-						<div><input type=checkbox />Cough</div>
-						<div><input type=checkbox />Fever</div>
-						<div><input type=checkbox />SOB</div>
-						<div><input type=checkbox />Diarrhea</div>
-						<div><input type=checkbox />Fatigue</div>
-						<div><input type=checkbox />Headache</div>
-						<div><input type=checkbox />Loss of Smell</div>
-						<div><input type=checkbox />Loss of Taste</div>
-						<div><input type=checkbox />Runny Nose</div>
-						<div><input type=checkbox />Sore Muscles</div>
-						<div><input type=checkbox />Sore Throat</div>
-						<div><input type=checkbox />Indications</div>
+					<div>
+						<h3>Patient must present with these Comorbidities:</h3>
+						<br>
+						<div class=checklist>
+							<div><label for="diabetes"><input type=checkbox name="diabetes" id="diabetes"/>Diabetes<label></div>
+							<div><label for="congestive heart failure"><input type=checkbox name="chd" id="chd"/>Congestive Heart Disease<label></div>
+							<div><label for="hypertension"><input type=checkbox name="htn" id="htn"/>Hypertension<label></div>
+							<div><label for="cancer"><input type=checkbox name="cancer" id="cancer"/>Cancer<label></div>
+							<div><label for="asthma"><input type=checkbox name="asthma" id="asthma"/>Asthma<label></div>
+							<div><label for="copd"><input type=checkbox name="copd" id="copd"/>COPD<label></div>
+							<div><label for="autoimmune disorder"><input type=checkbox name="autoimmune_dis" id="autoimmune_dis"/>Autoimmune Disorder<label></div>
+						</div>
 					</div>
-				</div>
-				<div>
-					<button type=submit>Add/Update</button>
-				</div>
+					<div>
+						<h3>Patient must present with these symptoms:</h3>
+						<br>
+						<div class=checklist>
+							<div><label for="dyspnea" ><input type=checkbox name="dyspnea" id="dyspnea"/>Dyspnea<label></div>
+							<div><label for="rhonchi" ><input type=checkbox name="rhonchi" id="rhonchi"/>Rhonchi<label></div>
+							<div><label for="wheezes" ><input type=checkbox name="wheezes" id="wheezes"/>Wheezes<label></div>
+							<div><label for="cough" ><input type=checkbox name="cough" id="cough"/>Cough<label></div>
+							<div><label for="fever" ><input type=checkbox name="fever" id="fever"/>Fever<label></div>
+							<div><label for="shortness of breath" ><input type=checkbox name="sob" id="sob"/>SOB<label></div>
+							<div><label for="diarrhea" ><input type=checkbox name="diarrhea" id="diarrhea"/>Diarrhea<label></div>
+							<div><label for="fatigue" ><input type=checkbox name="fatigue" id="fatigue"/>Fatigue<label></div>
+							<div><label for="headache" ><input type=checkbox name="headache" id="headache"/>Headache<label></div>
+							<div><label for="loss of smell" ><input type=checkbox name="loss_of_smell" id="loss_of_smell"/>Loss of Smell<label></div>
+							<div><label for="loss of taste" ><input type=checkbox name="loss_of_taste" id="loss_of_taste"/>Loss of Taste<label></div>
+							<div><label for="runny nose" ><input type=checkbox name="runny_nose" id="runny_nose"/>Runny Nose<label></div>
+							<div><label for="sore muscle" ><input type=checkbox name="muscle_sore" id="muscle_sore"/>Sore Muscles<label></div>
+							<div><label for="sore throat" ><input type=checkbox name="sore_throat" id="sore_throat"/>Sore Throat<label></div>
+							<div><label for="indications" ><input type=checkbox name="cxr_impression" id="cxr_impression"/>Indications<label></div>
+						</div>
+					</div>
+					<div>
+						<button type=submit class="pure-button pure-button-primary">Add/Update</button>
+					</div>
+				</fieldset>
 			</form>
 		</div>
 
