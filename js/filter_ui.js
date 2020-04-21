@@ -48,22 +48,10 @@ function assignUIEvents() {
 	document.getElementById("add-filter").addEventListener("click", (e) => {
 		document.getElementById("filter-form-wrapper").style.display="block";
 		e.currentTarget.style.display = "none";
-		var body = document.body;
-		body.style.overflowY = "hidden";
-		body.style.paddingRight= "15px";
-		body.style.position= "fixed";
-		body.style.top = `-${window.scrollY}px`;
 	});
 	document.getElementById("filter-done").addEventListener("click", (e) => {
 		document.getElementById("filter-form-wrapper").style.display="none";
 		document.getElementById("add-filter").style.display = "block";
-		var body = document.body;
-		var scrollY = document.body.style.top;
-		body.style.overflowY = "visible";
-		body.style.paddingRight= "0";
-		body.style.position= "static";
-		body.style.top = 0;
-		window.scrollTo(0, parseInt(scrollY || '0') * -1);
 	});
 }
 

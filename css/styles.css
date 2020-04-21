@@ -64,7 +64,7 @@ h3 {
 	color: gray;
 }
 #filter-form-wrapper {
-	position: absolute;
+	position: fixed;
 	display: none;
 	background-color: #F6F6F680; 
 	top: 0px;
