@@ -230,10 +230,11 @@ class Data {
 		});
 	}
 	// removeMajorRow manually removes an entire category. While _technically_ we're removing data, which you'd use D3.remove() for, we're more accurately removing an entire visualization.
-	removeMajorRow(filterID) {
+	removeFilterRow(filterID) {
 		document.querySelectorAll("." + filterID + "-row").forEach( (el) => { return el.remove(); });
 	}
 	// renderBarGraph is going to apply a filter to the data and create a new key-value pair where the value is an array of key value pairs
+	// TODO: we dont' use this to remove whole filters, but it might be more idiomatic to? might not be as efficient.
 	renderBarGraph(filters) {
 		if (this.totalPatients == 0) {
 			iflog("renderBarGraph(): exiting as length of data is 0");

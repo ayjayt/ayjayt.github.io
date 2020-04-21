@@ -1,5 +1,5 @@
 
-function populateFilterList(filterList) {
+function populateFilterList() {
 // Reads filters and writes to list
 	var filterListContainer = document.getElementById("filter-list");
 	while (filterListContainer.firstChild) {
@@ -12,8 +12,28 @@ function populateFilterList(filterList) {
 	});
 }
 
-function removeFilter() {
-// Removes filter from list and deletes it from array, then rerenders (all? or part?)
+function removeFilter(filterLabel) {
+	var targetFilterId;
+	filterList = filterList.filter( (el) => { 
+		if (el.label != filterLabel) {	
+			return true;
+		}
+		targetFilterId = el.ID;
+	});
+	populateFilterList();
+	data.removeFilterRow(targetFilterId);
 }
-// TODO: add onclick delete
 
+// assignUIEvents is run on body load to construct the ui
+function assignUIEvents() {
+	document.getElementById("filter-list-form").addEventListener("submit", (e) => {
+		e.preventDefault();
+	});
+	document.getElementById("delete-filter").addEventListener("click", (e) => {
+		e.preventDefault();
+		var filterList = document.getElementById("filter-list");
+		if (filterList.value) {
+			removeFilter(filterList.value);
+		}
+	});
+}
