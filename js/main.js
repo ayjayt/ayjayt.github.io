@@ -42,6 +42,7 @@ window.addEventListener("load", (event) => {
 		// STATE 6: Render chart structure
 		data.writeMajorColumns(); 
 		// STATE 7: Render actual bar graph
-		data.writeBarGraph(sampleFiltered);
+		data.prepareFilteredData(filterList);
+		data.renderBarGraph(filterList);
 	});
 })

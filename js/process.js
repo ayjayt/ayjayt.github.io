@@ -216,39 +216,37 @@ class Data {
 
 	// prepareFilteredData will use filterFunc on each row of mainDomain and populate the values member of the filter
 	// TODO maybe add a hash to see if it's changed. Probably a filter object method.
-	prepareFilteredData(filter) {
-		// STATE 8: use filters to calculate bar graph values
-		filter.values = [];
-		filter.sampleSize = this.positivePatients.filter(datum => filter.filterFunc(datum)).length;
-		this.mainDomain.forEach((row, i) => {
-			filter.values.push({"row":row.key, "value": row.data.filter(datum => filter.filterFunc(datum)).length });
+	prepareFilteredData(filters) {
+		if (!Array.isArray(filters)) {
+			filters = [ filters ];
+		}
+		filters.forEach( (filter, i) => {
+			// STATE 8: use filters to calculate bar graph values
+			filter.values = [];
+			filter.sampleSize = this.positivePatients.filter(datum => filter.filterFunc(datum)).length;
+			this.mainDomain.forEach((row, i) => {
+				filter.values.push({"row":row.key, "value": row.data.filter(datum => filter.filterFunc(datum)).length });
+			});
 		});
 	}
 	// removeMajorRow manually removes an entire category. While _technically_ we're removing data, which you'd use D3.remove() for, we're more accurately removing an entire visualization.
 	removeMajorRow(filterID) {
 		document.querySelectorAll("." + filterID + "-row").forEach( (el) => { return el.remove(); });
 	}
-	// writeBarGraph is going to apply a filter to the data and create a new key-value pair where the value is an array of key value pairs
-	writeBarGraph(filters) {
+	// renderBarGraph is going to apply a filter to the data and create a new key-value pair where the value is an array of key value pairs
+	renderBarGraph(filters) {
 		if (this.totalPatients == 0) {
-			iflog("writeBarGraph(): exiting as length of data is 0");
+			iflog("renderBarGraph(): exiting as length of data is 0");
 			return;
 		}
 		if (!Array.isArray(filters)) {
 			filters = [ filters ];
 		}
 		filters.forEach( (filter, i) => {
-			this.prepareFilteredData(filter); // TODO: this probably wont happen here if we're rerendering EVERYTHING
-
 			// STATE 9: Render filters
 			var chart = d3.select('#bar-chart').selectAll('.data-container');
 			chart = chart.selectAll('div .' + filter.ID + "-row"); 
 			chart = chart.data((d, i) => { return [ filter.values[i] ]; }, (d) => { return d.row + "_" + filter.ID; } );
-			// Engineering Note:
-			// D3 tutorial suggests in the case of nested selectAlls, to attach data twice. So values[] on '.data-container' and (d) => { return [ d ]; } for 'div'
-			// But attaching data to '.data-container' doesn't make sense.
-			// Passing any type of an array back to just 'div' produced "undefined behavior"- you end up looping over the whole array within every '.data-container'.
-			// This function accesses the particular value you want to attach and makes it an array.
 			iflog("Filter: ");
 			iflog(filter);
 			iflog("Enter: ");

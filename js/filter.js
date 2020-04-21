@@ -69,8 +69,8 @@ class Filter {
 }
 
 
-// sampleFiltered is an array of sample filter objects for testing
-var sampleFiltered = [
+// filterList is the array of filters, these are the default filters
+var filterList = [
 	new Filter("All", [], 0),
 	new Filter(">45yo", [new FilterMap("age", ">", 45)], 1)
 ];
