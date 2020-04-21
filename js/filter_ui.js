@@ -47,10 +47,13 @@ function assignUIEvents() {
 	});
 	document.getElementById("add-filter").addEventListener("click", (e) => {
 		document.getElementById("filter-form-wrapper").style.display="block";
+		document.getElementById("filter-form").style.display="grid";
+		document.getElementById("filter-form").style.top=(window.scrollY + 10) + "px";
 		e.currentTarget.style.display = "none";
 	});
 	document.getElementById("filter-done").addEventListener("click", (e) => {
 		document.getElementById("filter-form-wrapper").style.display="none";
+		document.getElementById("filter-form").style.display="none";
 		document.getElementById("add-filter").style.display = "block";
 	});
 }

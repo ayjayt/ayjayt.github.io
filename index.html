@@ -24,82 +24,82 @@
 	<div id="bar-chart"></div>
 	<br>
 	<div id="filter-form-wrapper">
-		<div id="filter-form">
-			<div id="filter-done">X</div>
-			<div id="filter-list-container">
-				<form id="filter-list-form" class="pure-form">
-					<fieldset>
-						<h1><legend>Filter List</legend></h1>
-						<label for="filter-list">
-							<select name="filter-list" id="filter-list" size=15>	
-							</select>
+	</div>
+	<div id="filter-form">
+		<div id="filter-done">X</div>
+		<div id="filter-list-container">
+			<form id="filter-list-form" class="pure-form">
+				<fieldset>
+					<h1><legend>Filter List</legend></h1>
+					<label for="filter-list">
+						<select name="filter-list" id="filter-list" size=15>	
+						</select>
+					</label>
+					<div><center>
+						<!--button type=submit class="pure-button pure-button-primary">Edit</button-->
+						<button id="delete-filter" type=button class="pure-button button-warning">Delete</button>
+					</center></div>
+				</fieldset>
+			</form>
+		</div>
+		<div id="filter-gen-container">
+			<form id="filter-gen" class="pure-form">
+				<fieldset>
+					<h1><legend>Filter Builder</legend></h1>
+					<h3>Example: If you select "cough", it will show you % of patients w/ fever who have cough, % of patients w/ SOB who have cough, etc.</h3>
+					<h3 id="editing"></h3>
+					<input type=hidden id="editing"/>
+					<div class="age-inputs">
+						<label for="label">
+							Filter Label: <input type=text name="label" id="label">
 						</label>
-						<div><center>
-							<!--button type=submit class="pure-button pure-button-primary">Edit</button-->
-							<button id="delete-filter" type=button class="pure-button button-warning">Delete</button>
-						</center></div>
-					</fieldset>
-				</form>
-			</div>
-			<div id="filter-gen-container">
-				<form id="filter-gen" class="pure-form">
-					<fieldset>
-						<h1><legend>Filter Builder</legend></h1>
-						<h3>Example: If you select "cough", it will show you % of patients w/ fever who have cough, % of patients w/ SOB who have cough, etc.</h3>
-						<h3 id="editing"></h3>
-						<input type=hidden id="editing"/>
-						<div class="age-inputs">
-							<label for="label">
-								Filter Label: <input type=text name="label" id="label">
-							</label>
-							<label for="minimum age">
-								Minimum Age: <input type=number name="min-age" id="min-age">
-							</label>
-							<label for="maximum age">
-								Maximum Age: <input type=number name="max-age" id="max-age">
-							</label>
+						<label for="minimum age">
+							Minimum Age: <input type=number name="min-age" id="min-age">
+						</label>
+						<label for="maximum age">
+							Maximum Age: <input type=number name="max-age" id="max-age">
+						</label>
+					</div>
+					<div>
+						<h3>Patient must present with these Comorbidities:</h3>
+						<br>
+						<div class=checklist id="comorbidity_options">
+							<div><label for="diabetes"><input type=checkbox name="diabetes" data-filter_op="==" data-filter_val="TRUE" id="diabetes"/>Diabetes<label></div>
+							<div><label for="congestive heart failure"><input type=checkbox name="chd" data-filter_op="==" data-filter_val="TRUE" id="chd"/>Congestive Heart Disease<label></div>
+							<div><label for="hypertension"><input type=checkbox name="htn" data-filter_op="==" data-filter_val="TRUE" id="htn"/>Hypertension<label></div>
+							<div><label for="cancer"><input type=checkbox name="cancer" data-filter_op="==" data-filter_val="TRUE" id="cancer"/>Cancer<label></div>
+							<div><label for="asthma"><input type=checkbox name="asthma" data-filter_op="==" data-filter_val="TRUE" id="asthma"/>Asthma<label></div>
+							<div><label for="copd"><input type=checkbox name="copd" data-filter_op="==" data-filter_val="TRUE" id="copd"/>COPD<label></div>
+							<div><label for="autoimmune disorder"><input type=checkbox name="autoimmune_dis" data-filter_op="==" data-filter_val="TRUE" id="autoimmune_dis"/>Autoimmune Disorder<label></div>
 						</div>
-						<div>
-							<h3>Patient must present with these Comorbidities:</h3>
-							<br>
-							<div class=checklist id="comorbidity_options">
-								<div><label for="diabetes"><input type=checkbox name="diabetes" data-filter_op="==" data-filter_val="TRUE" id="diabetes"/>Diabetes<label></div>
-								<div><label for="congestive heart failure"><input type=checkbox name="chd" data-filter_op="==" data-filter_val="TRUE" id="chd"/>Congestive Heart Disease<label></div>
-								<div><label for="hypertension"><input type=checkbox name="htn" data-filter_op="==" data-filter_val="TRUE" id="htn"/>Hypertension<label></div>
-								<div><label for="cancer"><input type=checkbox name="cancer" data-filter_op="==" data-filter_val="TRUE" id="cancer"/>Cancer<label></div>
-								<div><label for="asthma"><input type=checkbox name="asthma" data-filter_op="==" data-filter_val="TRUE" id="asthma"/>Asthma<label></div>
-								<div><label for="copd"><input type=checkbox name="copd" data-filter_op="==" data-filter_val="TRUE" id="copd"/>COPD<label></div>
-								<div><label for="autoimmune disorder"><input type=checkbox name="autoimmune_dis" data-filter_op="==" data-filter_val="TRUE" id="autoimmune_dis"/>Autoimmune Disorder<label></div>
-							</div>
+					</div>
+					<div>
+						<h3>Patient must present with these symptoms:</h3>
+						<br>
+						<div class=checklist id="symptom_options">
+							<div><label for="dyspnea" ><input type=checkbox name="dyspnea" data-filter_op="==" data-filter_val="TRUE" id="dyspnea"/>Dyspnea<label></div>
+							<div><label for="rhonchi" ><input type=checkbox name="rhonchi" data-filter_op="==" data-filter_val="TRUE" id="rhonchi"/>Rhonchi<label></div>
+							<div><label for="wheezes" ><input type=checkbox name="wheezes" data-filter_op="==" data-filter_val="TRUE" id="wheezes"/>Wheezes<label></div>
+							<div><label for="cough" ><input type=checkbox name="cough" data-filter_op="==" data-filter_val="TRUE" id="cough"/>Cough<label></div>
+							<div><label for="fever" ><input type=checkbox name="fever" data-filter_op="==" data-filter_val="TRUE" id="fever"/>Fever<label></div>
+							<div><label for="shortness of breath" ><input type=checkbox name="sob" data-filter_op="==" data-filter_val="TRUE" id="sob"/>SOB<label></div>
+							<div><label for="diarrhea" ><input type=checkbox name="diarrhea" data-filter_op="==" data-filter_val="TRUE" id="diarrhea"/>Diarrhea<label></div>
+							<div><label for="fatigue" ><input type=checkbox name="fatigue" data-filter_op="==" data-filter_val="TRUE" id="fatigue"/>Fatigue<label></div>
+							<div><label for="headache" ><input type=checkbox name="headache" data-filter_op="==" data-filter_val="TRUE" id="headache"/>Headache<label></div>
+							<div><label for="loss of smell" ><input type=checkbox name="loss_of_smell" data-filter_op="==" data-filter_val="TRUE" id="loss_of_smell"/>Loss of Smell<label></div>
+							<div><label for="loss of taste" ><input type=checkbox name="loss_of_taste" data-filter_op="==" data-filter_val="TRUE" id="loss_of_taste"/>Loss of Taste<label></div>
+							<div><label for="runny nose" ><input type=checkbox name="runny_nose" data-filter_op="==" data-filter_val="TRUE" id="runny_nose"/>Runny Nose<label></div>
+							<div><label for="sore muscle" ><input type=checkbox name="muscle_sore" data-filter_op="==" data-filter_val="TRUE" id="muscle_sore"/>Sore Muscles<label></div>
+							<div><label for="sore throat" ><input type=checkbox name="sore_throat" data-filter_op="==" data-filter_val="TRUE" id="sore_throat"/>Sore Throat<label></div>
+							<div><label for="indications" ><input type=checkbox name="cxr_impression" data-filter_op="==" data-filter_val="TRUE" id="cxr_impression"/>Indications<label></div>
 						</div>
-						<div>
-							<h3>Patient must present with these symptoms:</h3>
-							<br>
-							<div class=checklist id="symptom_options">
-								<div><label for="dyspnea" ><input type=checkbox name="dyspnea" data-filter_op="==" data-filter_val="TRUE" id="dyspnea"/>Dyspnea<label></div>
-								<div><label for="rhonchi" ><input type=checkbox name="rhonchi" data-filter_op="==" data-filter_val="TRUE" id="rhonchi"/>Rhonchi<label></div>
-								<div><label for="wheezes" ><input type=checkbox name="wheezes" data-filter_op="==" data-filter_val="TRUE" id="wheezes"/>Wheezes<label></div>
-								<div><label for="cough" ><input type=checkbox name="cough" data-filter_op="==" data-filter_val="TRUE" id="cough"/>Cough<label></div>
-								<div><label for="fever" ><input type=checkbox name="fever" data-filter_op="==" data-filter_val="TRUE" id="fever"/>Fever<label></div>
-								<div><label for="shortness of breath" ><input type=checkbox name="sob" data-filter_op="==" data-filter_val="TRUE" id="sob"/>SOB<label></div>
-								<div><label for="diarrhea" ><input type=checkbox name="diarrhea" data-filter_op="==" data-filter_val="TRUE" id="diarrhea"/>Diarrhea<label></div>
-								<div><label for="fatigue" ><input type=checkbox name="fatigue" data-filter_op="==" data-filter_val="TRUE" id="fatigue"/>Fatigue<label></div>
-								<div><label for="headache" ><input type=checkbox name="headache" data-filter_op="==" data-filter_val="TRUE" id="headache"/>Headache<label></div>
-								<div><label for="loss of smell" ><input type=checkbox name="loss_of_smell" data-filter_op="==" data-filter_val="TRUE" id="loss_of_smell"/>Loss of Smell<label></div>
-								<div><label for="loss of taste" ><input type=checkbox name="loss_of_taste" data-filter_op="==" data-filter_val="TRUE" id="loss_of_taste"/>Loss of Taste<label></div>
-								<div><label for="runny nose" ><input type=checkbox name="runny_nose" data-filter_op="==" data-filter_val="TRUE" id="runny_nose"/>Runny Nose<label></div>
-								<div><label for="sore muscle" ><input type=checkbox name="muscle_sore" data-filter_op="==" data-filter_val="TRUE" id="muscle_sore"/>Sore Muscles<label></div>
-								<div><label for="sore throat" ><input type=checkbox name="sore_throat" data-filter_op="==" data-filter_val="TRUE" id="sore_throat"/>Sore Throat<label></div>
-								<div><label for="indications" ><input type=checkbox name="cxr_impression" data-filter_op="==" data-filter_val="TRUE" id="cxr_impression"/>Indications<label></div>
-							</div>
-						</div>
-						<div>
-							<button type=submit class="pure-button pure-button-primary">Add<!--/Update--></button>
-							<!--button type=submit class="pure-button button-warning">Cancel</button-->
-						</div>
-					</fieldset>
-				</form>
-			</div>
+					</div>
+					<div>
+						<button type=submit class="pure-button pure-button-primary">Add<!--/Update--></button>
+						<!--button type=submit class="pure-button button-warning">Cancel</button-->
+					</div>
+				</fieldset>
+			</form>
 		</div>
 	</div>
 	<script src="js/d3.js"></script>
