@@ -15,3 +15,4 @@ Calculate every permutation serverside in python
 * shouldn't all severe + moderate + mild cough = any cough?
 * maybe not 100% for "% of patients with cough amoung those with cough"
 * add edit filter maybe
+* change select to ul for mobile's sake
