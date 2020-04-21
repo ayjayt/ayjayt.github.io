@@ -33,18 +33,22 @@
 							<option>Sample</option>
 						</select>
 					</label>
-					<div>
+					<div><center>
 						<button type=submit class="pure-button pure-button-primary">Edit</button>
 						<button type=button class="pure-button button-warning">Delete</button>
-					</div>
+					</center></div>
 				</fieldset>
 			</form>
 		</div>
 		<div id="filter-gen-container">
 			<form id="filter-gen" class="pure-form">
 				<fieldset>
-					<h1><legend>Filter Buidler</legend></h1>
+					<h1><legend>Filter Builder</legend></h1>
+					<h3 id="editing"></h3>
 					<div class="age-inputs">
+						<label for="label">
+							Filter Label: <input type=text name="label" id="label">
+						</label>
 						<label for="minimum age">
 							Minimum Age: <input type=number name="min-age" id="min-age">
 						</label>
@@ -88,6 +92,7 @@
 					</div>
 					<div>
 						<button type=submit class="pure-button pure-button-primary">Add/Update</button>
+						<button type=submit class="pure-button button-warning">Cancel</button>
 					</div>
 				</fieldset>
 			</form>
