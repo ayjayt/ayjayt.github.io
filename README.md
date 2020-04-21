@@ -7,3 +7,9 @@ But it's fine for now. Hopefully it gets some clicks!
 (It's pretty organized IMO)
 
 Calculate every permutation serverside in python
+
+# TODO:
+
+* image indicating is a little hokey, more positives etc
+* shouldn't all severe + moderate + mild cough = any cough?
+* maybe not 100% for "% of patients with cough amoung those with cough"

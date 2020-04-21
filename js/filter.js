@@ -74,3 +74,4 @@ var filterList = [
 	new Filter("All", [], 0),
 	new Filter(">45yo", [new FilterMap("age", ">", 45)], 1)
 ];
+

@@ -26,6 +26,15 @@ function removeFilter(filterLabel) {
 
 // assignUIEvents is run on body load to construct the ui
 function assignUIEvents() {
+	document.getElementById("filter-gen").addEventListener("submit", (e) => {
+		e.preventDefault();
+		genFilter();
+		populateFilterList();
+		// data.prepareFilteredData(filterList); -- done in advance
+		data.renderBarGraph(filterList); // error here
+		// TODO: can we render just one?
+		// TODO: what happens if we change colors and rerender?
+	});
 	document.getElementById("filter-list-form").addEventListener("submit", (e) => {
 		e.preventDefault();
 	});
@@ -37,3 +46,44 @@ function assignUIEvents() {
 		}
 	});
 }
+
+// genFilter reads the filter form and generates a new element in filterList
+function genFilter() {
+	var filterMaps = [];
+	var label = document.getElementById("label").value;
+	if (label == "") {
+		alert("please create a label");
+		return false;
+	}
+	var minAge = document.getElementById("min-age").value;
+	var ageString = "";
+	if (minAge === "") {
+		minAge = 0;
+	}
+	if (minAge != 0) {
+		filterMaps.push(new FilterMap("age", ">=", minAge));
+	}
+	var maxAge = document.getElementById("max-age").value;
+	if (maxAge === "") {
+		maxAge = 120;
+	}
+	if (maxAge < 120) {
+		filterMaps.push(new FilterMap("age", "<=", maxAge));
+	}
+	var comorbidityList = document.getElementById("comorbidity_options").querySelectorAll('input[type=checkbox]:checked');
+	var symptomList = document.getElementById("symptom_options").querySelectorAll('input[type=checkbox]:checked');
+	function wf(el) {
+		filterMaps.push(new FilterMap(el.getAttribute("id"), el.getAttribute("data-filter_op"), el.getAttribute("data-filter_val")));
+	}
+	comorbidityList.forEach(wf);
+	symptomList.forEach(wf);
+	var newFilter = new Filter(label, filterMaps, filterList.length);
+	data.prepareFilteredData(newFilter);
+	filterList.push(newFilter); 
+	document.getElementById("filter-gen").reset();
+	document.getElementById("filter-list").style.backgroundColor = "#58ff58";
+	document.getElementById("filter-list").style.transition = "background 0.2s ease-in-out";
+	document.getElementById("filter-list").style.backgroundColor = "transparent";
+}
+	
+	

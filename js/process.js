@@ -232,6 +232,8 @@ class Data {
 	// removeMajorRow manually removes an entire category. While _technically_ we're removing data, which you'd use D3.remove() for, we're more accurately removing an entire visualization.
 	removeFilterRow(filterID) {
 		document.querySelectorAll("." + filterID + "-row").forEach( (el) => { return el.remove(); });
+		// TODO: what's the best way to fix colors now? rerendering doesn't work- yet. if axis was data, maybe.
+		// TODO: probably just edit function above to get siblings and redo the two color calculations as in render
 	}
 	// renderBarGraph is going to apply a filter to the data and create a new key-value pair where the value is an array of key value pairs
 	// TODO: we dont' use this to remove whole filters, but it might be more idiomatic to? might not be as efficient.
