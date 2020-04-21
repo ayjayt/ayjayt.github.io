@@ -44,5 +44,7 @@ window.addEventListener("load", (event) => {
 		// STATE 7: Render actual bar graph
 		data.prepareFilteredData(filterList);
 		data.renderBarGraph(filterList);
+		// STATE 10: Populate filterList control
+		populateFilterList(filterList);
 	});
 })
