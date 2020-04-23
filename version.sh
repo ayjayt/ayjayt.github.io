@@ -1,6 +1,6 @@
 echo -en '
 #version {
-	content: "'"$(git describe --always)"'";
+	content: "'"$(git describe --always)"' + 1";
 	color: #F3F3F3;
 	position: absolute;
 	top: 2px;
