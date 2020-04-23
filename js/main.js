@@ -42,6 +42,7 @@ window.addEventListener("load", (event) => {
 		// STATE 6: Render chart structure
 		data.writeMajorColumns(); 
 		// STATE 7: Render actual bar graph
+		// TODO: check to see if there is any data here?
 		data.prepareFilteredData(filterList);
 		data.renderBarGraph(filterList);
 		// STATE 10: Populate filterList control

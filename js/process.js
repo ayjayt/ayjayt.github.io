@@ -13,6 +13,7 @@ class Data {
 	constructor() {
 		// These are the dependent variables, basically. A lot of redundancy here.
 		this.totalPatients = 0;
+		this.positivePatients = [];
 		this.mainDomain = [
 			{ text: "Dyspnea", key: "dyspnea", data: [] },
 			{ text: "Rhonci", key: "rhonchi", data: [] },
