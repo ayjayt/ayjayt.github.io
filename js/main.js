@@ -2,7 +2,9 @@
 
 // List of datasources
 var DATAURLS = [ 
-	"https://raw.githubusercontent.com/mdcollab/covidclinicaldata/master/data/04-07_carbonhealth_and_braidhealth.csv"
+	"https://raw.githubusercontent.com/mdcollab/covidclinicaldata/master/data/04-07_carbonhealth_and_braidhealth.csv",
+	"https://raw.githubusercontent.com/mdcollab/covidclinicaldata/master/data/04-14_carbonhealth_and_braidhealth.csv",
+	"https://raw.githubusercontent.com/mdcollab/covidclinicaldata/master/data/04-21_carbonhealth_and_braidhealth.csv"
 	];
 
 // LOGON is a global variable to turn verbose logging on
@@ -39,6 +41,7 @@ window.addEventListener("load", (event) => {
 	Promise.all(remoteDataProm).catch( () => {
 		iflog("window.load(): at least one data retrieval failed")
 	}).finally( () => {
+		data.populateDomains();
 		// STATE 6: Render chart structure
 		data.writeMajorColumns(); 
 		// STATE 7: Render actual bar graph

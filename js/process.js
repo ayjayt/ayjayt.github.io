@@ -8,6 +8,8 @@ const CSVVersion0Columns = JSON.stringify(["clinic_state", "test_name", "covid19
 
 const CSVVersion04072020Columns = JSON.stringify(["date_published", "clinic_state", "test_name", "swab_type", "covid_19_test_results", "age", "high_risk_exposure_occupation", "high_risk_interactions", "diabetes", "chd", "htn", "cancer", "asthma", "copd", "autoimmune_dis", "temperature", "pulse", "sys", "dia", "rr", "sats", "rapid_flu", "rapid_flu_results", "rapid_strep", "rapid_strep_results", "ctab", "labored_respiration", "rhonchi", "wheezes", "cough", "cough_severity", "fever", "sob", "sob_severity", "diarrhea", "fatigue", "headache", "loss_of_smell", "loss_of_taste", "runny_nose", "muscle_sore", "sore_throat", "cxr_findings", "cxr_impression", "cxr_link"]);
 
+const CSVVersion04212020Columns = JSON.stringify(["date_published", "clinic_state", "test_name", "swab_type", "covid19_test_results", "age", "high_risk_exposure_occupation", "high_risk_interactions", "diabetes", "chd", "htn", "cancer", "asthma", "copd", "autoimmune_dis", "temperature", "pulse", "sys", "dia", "rr", "sats", "rapid_flu_results", "rapid_strep_results", "days_since_symptom_onset", "ctab", "labored_respiration", "rhonchi", "wheezes", "cough", "cough_severity", "fever", "sob", "sob_severity", "diarrhea", "fatigue", "headache", "loss_of_smell", "loss_of_taste", "runny_nose", "muscle_sore", "sore_throat", "cxr_findings", "cxr_impression", "cxr_link", "er_referral"]);
+
 // Data class represents the ultimate schema.
 class Data {
 	constructor() {
@@ -45,13 +47,17 @@ class Data {
 		iflog("detectAndProcess(): processing");
 		try {
 			var proprietaryObject = d3.csvParse(raw);
+			var colString = JSON.stringify(proprietaryObject.columns);
 			// STATE 5: detect schema of CSV object and add to columns
-			if ( JSON.stringify(proprietaryObject.columns) === CSVVersion0Columns ) {
-				iflog("Data.readCSV(): Detected Versio 0 CarbonBraid Schema")
+			if ( colString === CSVVersion0Columns ) {
+				iflog("Data.readCSV(): Detected Versio 0 CarbonBraid Schema");
 				this.processCSVVersion0(proprietaryObject)
-			} else if ( JSON.stringify(proprietaryObject.columns) === CSVVersion04072020Columns ) {
-				iflog("Data.readCSV(): Detected 04072020 CarbonBraid Schema")
+			} else if ( colString === CSVVersion04072020Columns ) {
+				iflog("Data.readCSV(): Detected 04072020 CarbonBraid Schema");
 				this.processCSVVersion04072020(proprietaryObject)
+			} else if ( colString === CSVVersion04212020Columns ) {
+				iflog("Data.readCSV(): Detected 04072020 CarbonBraid Schema V2");
+				this.processCSVVersion0(proprietaryObject) // BUG TODO: PROBABLY NOT A GREAT IDEA TO USE OLD FUNCTION
 			} else {
 				iflog("Data.readCSV(): data is in unkown format");
 			}
@@ -66,154 +72,87 @@ class Data {
 	// processCSVVersion04072020 will convert the 4-7-20 CarbonHealth/Braid format to a uniform dataformat. 
 	// this is supposed to be conforming data
 	processCSVVersion04072020(raw) {
-		this.positivePatients = raw.filter(datum => datum.covid_19_test_results === "Positive")
-		this.totalPatients += this.positivePatients.length;
-		this.mainDomain.forEach( (element, i) => {
-			if (element.key === "dyspnea") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.labored_respiration === "TRUE"));
-			}
-			else if (element.key === "rhonchi") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.rhonchi === "TRUE"));
-			}
-			else if (element.key === "wheezes") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.wheezes === "TRUE"));
-			}
-			else if (element.key === "cough") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.cough === "TRUE"));
-			}
-			else if (element.key === "cough_mild") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.cough_severity === "Mild"));
-			}
-			else if (element.key === "cough_moderate") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.cough_severity === "Moderate"));
-			}
-			else if (element.key === "cough_severe") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.cough_severity === "Severe"));
-			}
-			else if (element.key === "fever") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.fever === "TRUE")) ;
-			}
-			else if (element.key === "sob") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.sob === "TRUE"));
-			}
-			else if (element.key === "sob_mild") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.sob_severity === "Mild"));
-			}
-			else if (element.key === "sob_moderate") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.sob_severity === "Moderate"));
-			}
-			else if (element.key === "sob_severe") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.sob_severity === "Severe"));
-			}
-			else if (element.key === "diarrhea") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.diarrhea === "TRUE"));
-			}
-			else if (element.key === "fatigue") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.fatigue === "TRUE"));
-			}
-			else if (element.key === "headache") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.headache === "TRUE"));
-			}
-			else if (element.key === "loss_of_smell") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.loss_of_smell === "TRUE"));
-			}
-			else if (element.key === "loss_of_taste") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.loss_of_taste === "TRUE"));
-			}
-			else if (element.key === "runny_nose") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.runny_nose === "TRUE"));
-			}
-			else if (element.key === "muscle_sore") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.muscle_sore === "TRUE"));
-			}
-			else if (element.key === "sore_throat") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.sore_throat === "TRUE"));
-			}
-			else if (element.key === "cxr_impression") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(this.positivePatients.filter(datum => datum.cxr_impression != ""));
-			}
-		});
-		
+		this.positivePatients = this.positivePatients.concat(raw.filter(datum => datum.covid_19_test_results === "Positive"));
 		iflog("processCSVversion0(): begin processing")
 		return 
 	}
 	// processCSVVersion0 will convert the 4-6-20 CarbonHealth/Braid format to a uniform dataformat. Don't really think it matters if they're part of the class.
 	// this is supposed to be conforming data
 	processCSVVersion0(raw) {
-		this.positivePatients = raw.filter(datum => datum.covid19_test_results === "Positive")
-		this.totalPatients += this.positivePatients.length;
-		// TODO: we should conform the rows (maybe modify CSV string directly?)
-		// Then we can just do this once, basically, and probably use a loop with a list of FilterMaps or something like it
-		this.mainDomain.forEach( (element, i) => {
-			if (element.key === "dyspnea") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.dyspnea === "TRUE"));
-			}
-			else if (element.key === "rhonchi") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.rhonchi === "TRUE"));
-			}
-			else if (element.key === "wheezes") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.wheezes === "TRUE"));
-			}
-			else if (element.key === "cough") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.cough === "TRUE"));
-			}
-			else if (element.key === "cough_mild") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.cough_severity === "Mild"));
-			}
-			else if (element.key === "cough_moderate") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.cough_severity === "Moderate"));
-			}
-			else if (element.key === "cough_severe") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.cough_severity === "Severe"));
-			}
-			else if (element.key === "fever") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.fever === "TRUE")) ;
-			}
-			else if (element.key === "sob") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.sob === "TRUE"));
-			}
-			else if (element.key === "sob_mild") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.sob_severity === "Mild"));
-			}
-			else if (element.key === "sob_moderate") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.sob_severity === "Moderate"));
-			}
-			else if (element.key === "sob_severe") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.sob_severity === "Severe"));
-			}
-			else if (element.key === "diarrhea") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.diarrhea === "TRUE"));
-			}
-			else if (element.key === "fatigue") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.fatigue === "TRUE"));
-			}
-			else if (element.key === "headache") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.headache === "TRUE"));
-			}
-			else if (element.key === "loss_of_smell") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.loss_of_smell === "TRUE"));
-			}
-			else if (element.key === "loss_of_taste") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.loss_of_taste === "TRUE"));
-			}
-			else if (element.key === "runny_nose") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.runny_nose === "TRUE"));
-			}
-			else if (element.key === "muscle_sore") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.muscle_sore === "TRUE"));
-			}
-			else if (element.key === "sore_throat") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.sore_throat === "TRUE"));
-			}
-			else if (element.key === "cxr_impression") {
-				this.mainDomain[i].data = this.mainDomain[i].data.concat(positive.filter(datum => datum.cxr_impression != ""));
-			}
-		});
-		
+		this.positivePatients = this.positivePatients.concat(raw.filter(datum => datum.covid19_test_results === "Positive"));
 		iflog("processCSVversion0(): begin processing")
 		return 
 	}
 
+	// populateDomains will take the main data (positivePatients) and build out different lists for each domain, applying their default filter.
+	populateDomains() {
+		this.totalPatients = this.positivePatients.length;
+		this.mainDomain.forEach( (element, i) => {
+			if (element.key === "dyspnea") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.dyspnea === "TRUE");
+			}
+			else if (element.key === "rhonchi") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.rhonchi === "TRUE");
+			}
+			else if (element.key === "wheezes") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.wheezes === "TRUE");
+			}
+			else if (element.key === "cough") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.cough === "TRUE");
+			}
+			else if (element.key === "cough_mild") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.cough_severity === "Mild");
+			}
+			else if (element.key === "cough_moderate") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.cough_severity === "Moderate");
+			}
+			else if (element.key === "cough_severe") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.cough_severity === "Severe");
+			}
+			else if (element.key === "fever") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.fever === "TRUE");
+			}
+			else if (element.key === "sob") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.sob === "TRUE");
+			}
+			else if (element.key === "sob_mild") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.sob_severity === "Mild");
+			}
+			else if (element.key === "sob_moderate") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.sob_severity === "Moderate");
+			}
+			else if (element.key === "sob_severe") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.sob_severity === "Severe");
+			}
+			else if (element.key === "diarrhea") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.diarrhea === "TRUE");
+			}
+			else if (element.key === "fatigue") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.fatigue === "TRUE");
+			}
+			else if (element.key === "headache") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.headache === "TRUE");
+			}
+			else if (element.key === "loss_of_smell") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.loss_of_smell === "TRUE");
+			}
+			else if (element.key === "loss_of_taste") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.loss_of_taste === "TRUE");
+			}
+			else if (element.key === "runny_nose") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.runny_nose === "TRUE");
+			}
+			else if (element.key === "muscle_sore") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.muscle_sore === "TRUE");
+			}
+			else if (element.key === "sore_throat") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.sore_throat === "TRUE");
+			}
+			else if (element.key === "cxr_impression") {
+				this.mainDomain[i].data = this.positivePatients.filter(datum => datum.cxr_impression != "");
+			}
+		});
+}
 
 	// prepareFilteredData will use filterFunc on each row of mainDomain and populate the values member of the filter
 	// TODO maybe add a hash to see if it's changed. Probably a filter object method.
