@@ -6,20 +6,21 @@ function retrieveData(address) {
 		fetch(address).then((response) => {
 			if ( response.status != 200 ) {
 				iflog("retrieveData.fetch.resolve: Response non-200");
-				reject(address);
+				reject(new SourceData(address, ""));
 				// STATE: ERROR, non-200 response
 				return;
 			}
-			var rawData = response.text();
-			iflog("retrieveData.fetch.resolve: Data Retrieved");
-			// STATE: 3, Data Loaded
-			resolve(rawData);
+			response.text().then( text => {
+				var sourceData = new SourceData("",text);
+				iflog("retrieveData.fetch.resolve: Data Retrieved");
+				resolve(sourceData);
+			});
 		}).catch((err) => {
 			iflog("retrieveData.fetch.reject: Error");
-			reject(address);
+			iflog(err);
+			reject(new SourceData(address, ""));
 			// STATE: ERROR, fetch failed
 		})
 		iflog("retrieveData(): Data Requested");
-		// STATE: 2, Loading Data
 	})
 }

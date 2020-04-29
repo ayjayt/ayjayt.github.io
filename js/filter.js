@@ -18,10 +18,12 @@ class FilterMap {
 
 // Filter is basically a class that takes a data object and produces a summary based on the specified filters. It renders itself to the graph.
 class Filter {
-	constructor(label, filterMap, colorIndex) {
+	constructor(label, positive, negative, filterMaps, colorIndex) {
 		this.label = label;
 		this.colorIndex = colorIndex;
-		this.filterMap = filterMap;
+		this.positive = positive;
+		this.negative = negative;
+		this.filterMaps = filterMaps;
 		// Construct function from map here;
 		this.ID = "i" + uuidv4();
 		this.values = [];
@@ -31,34 +33,34 @@ class Filter {
 	// filterFunc runs the filterMap. 
 	// TODO: It could use generated and stored functions, which would be faster.
 	filterFunc(elem) {
-		for (let i = 0; i < this.filterMap.length; i ++) {
-			if (this.filterMap[i].op === "==") {
-				if ( elem[this.filterMap[i].key] == this.filterMap[i].val ) {
+		for (let i = 0; i < this.filterMaps.length; i ++) {
+			if (this.filterMaps[i].op === "==") {
+				if ( elem[this.filterMaps[i].key] == this.filterMaps[i].val ) {
 				} else {
 					return false;
 				}
-			} else if (this.filterMap[i].op === "!=") {
-				if ( elem[this.filterMap[i].key] != this.filterMap[i].val ) {
+			} else if (this.filterMaps[i].op === "!=") {
+				if ( elem[this.filterMaps[i].key] != this.filterMaps[i].val ) {
 				} else {
 					return false;
 				}
-			} else if (this.filterMap[i].op === ">") {
-				if ( elem[this.filterMap[i].key] > this.filterMap[i].val ) {
+			} else if (this.filterMaps[i].op === ">") {
+				if ( elem[this.filterMaps[i].key] > this.filterMaps[i].val ) {
 				} else {
 					return false;
 				}
-			} else if (this.filterMap[i].op === "<") {
-				if ( elem[this.filterMap[i].key] < this.filterMap[i].val ) {
+			} else if (this.filterMaps[i].op === "<") {
+				if ( elem[this.filterMaps[i].key] < this.filterMaps[i].val ) {
 				} else {
 					return false;
 				}
-			} else if (this.filterMap[i].op === ">=") {
-				if ( elem[this.filterMap[i].key] >= this.filterMap[i].val ) {
+			} else if (this.filterMaps[i].op === ">=") {
+				if ( elem[this.filterMaps[i].key] >= this.filterMaps[i].val ) {
 				} else {
 					return false;
 				}
-			} else if (this.filterMap[i].op === "<=") {
-				if ( elem[this.filterMap[i].key] <= this.filterMap[i].val ) {
+			} else if (this.filterMaps[i].op === "<=") {
+				if ( elem[this.filterMaps[i].key] <= this.filterMaps[i].val ) {
 				} else {
 					return false;
 				}
@@ -71,7 +73,7 @@ class Filter {
 
 // filterList is the array of filters, these are the default filters
 var filterList = [
-	new Filter("All", [], 0),
-	new Filter(">45yo", [new FilterMap("age", ">", 45)], 1)
+	new Filter("COVID+", true, false, [], 0),
+	new Filter("COVID-", false, true, [new FilterMap("age", ">", 45)], 1)
 ];
 
