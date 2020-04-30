@@ -23,7 +23,9 @@ html {
 }
 #filter-done {
 	position: absolute;
-	top:8px;
+	top:-6px;
+	right: 10px;
+	font-size: 20px;
 }
 #add-filter span {
 	line-height: inherit;

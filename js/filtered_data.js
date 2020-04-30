@@ -1,16 +1,20 @@
 // process.js basically stores the data in a datastructure more suited for searching by "tag" or some quality.
 
-class FilterRow {
-	constructor(filter) {
+class AppliedFilter {
+	constructor(label, filter) {
+		this.label = label;
 		this.filter = filter;
+		this.sampleSize = 0;
+		this.values = [];
 	}
 }
 
 // Data class represents the ultimate schema.
 class FilteredData {
+	//
+	// DATA STRUCTURE
+	//
 	constructor() {
-		// Here are our first filters
-		// This is basically a two node tree, the start of trie or something.
 		this.totalPatients = 0;
 		this.totalPositive = 0;
 		this.positivePatients = [];
@@ -39,9 +43,18 @@ class FilteredData {
 			{ preFilter: new FilterMap("sore_throat", "==", "TRUE"), text: "Sore Throat", key: "sore_throat", positive: [], negative: [] },
 			{ preFilter: new FilterMap("cxr_impression", "!=", ""), text: "Img. Indicatation", key: "cxr_impression", positive: [], negative: [] }
 		];
-		
-	}
 
+		// Or read from the URL
+		this.appliedFilterList = [
+			new AppliedFilter("COVID+", new Filter(true, false, [], 0)),
+			new AppliedFilter("COVID-", new Filter(false, true, [new FilterMap("age", ">", 45)]))
+		];
+		// Warning: Very dependent on arrays within AppliedFilters	(this.AppliedFilter.values) being same order as this.mainDomain
+	}
+	// pushAppliedFilter adds a filter to the appliedFilterList
+	pushAppliedFilter(appliedFilter) {
+		this.appliedFilterList.push(appliedFilter);
+	}
 
 	// addSourceData will take a source data and add it to the datastructure.
 	addSourceData(sourceData) {
@@ -53,7 +66,7 @@ class FilteredData {
 		this.totalNegative = this.negativePatients.length;	
 		this.totalPatients = this.totalPositive + this.totalNegative;
 		this.mainDomain.forEach( (element) => {
-			var filter = new Filter("", false, false, [ element.preFilter ], 0);
+			var filter = new Filter(false, false, [ element.preFilter ]);
 			element.positive = element.positive.concat(newPositive.filter(datum => filter.filterFunc(datum)) );
 			element.negative = element.negative.concat(newNegative.filter(datum => filter.filterFunc(datum)) );
 		});
@@ -61,34 +74,37 @@ class FilteredData {
 
 	// prepareFilteredData will use filterFunc on each row of mainDomain and populate the values member of the filter
 	// TODO maybe add a hash to see if it's changed. Probably a filter object method.
-	prepareFilteredData(filters) {
-		if (!Array.isArray(filters)) {
-			filters = [ filters ];
-		}
-		filters.forEach( (filter, i) => {
-			// STATE 8: use filters to calculate bar graph values
-			filter.values = [];
-			filter.sampleSize = 0;
-			if (filter.positive) {
-				filter.sampleSize += this.positivePatients.filter(datum => filter.filterFunc(datum)).length
+	// TODO maybe be able to do one at a time line 58
+	prepareFilteredData() {
+		this.appliedFilterList.forEach( (appliedFilter, i) => {
+			appliedFilter.filter.values = [];
+			appliedFilter.sampleSize = 0;
+			if (appliedFilter.filter.positive) {
+				appliedFilter.sampleSize += this.positivePatients.filter(datum => appliedFilter.filter.filterFunc(datum)).length
 			}
-			if (filter.negative) {
-				filter.sampleSize += this.negativePatients.filter(datum => filter.filterFunc(datum)).length
+			if (appliedFilter.filter.negative) {
+				appliedFilter.sampleSize += this.negativePatients.filter(datum => appliedFilter.filter.filterFunc(datum)).length
 			}
 			this.mainDomain.forEach((row, i) => {
 				var value = 0;
-				if (filter.positive) {
-					value += row.positive.filter(datum => filter.filterFunc(datum)).length
+				if (appliedFilter.filter.positive) {
+					value += row.positive.filter(datum => appliedFilter.filter.filterFunc(datum)).length
 				}
-				if (filter.negative) {
-					value += row.negative.filter(datum => filter.filterFunc(datum)).length
+				if (appliedFilter.filter.negative) {
+					value += row.negative.filter(datum => appliedFilter.filter.filterFunc(datum)).length
 				}
-				// TODO Not sure if this structure really needs "row":row.key
-				filter.values.push({"row":row.key, "value": value });
+				appliedFilter.values.push(value);
 			});
 		});
 	}
+
+	//
+	// VISUALIZATION GRAPHICS
+	//
+
+
 	// removeMajorRow manually removes an entire category. While _technically_ we're removing data, which you'd use D3.remove() for, we're more accurately removing an entire visualization.
+	// This is called by removeFilter in the UI section below
 	removeFilterRow(filterID) {
 		document.querySelectorAll("." + filterID + "-row").forEach( (el) => { 
 			return el.remove();
@@ -99,21 +115,23 @@ class FilteredData {
 	}
 
 	// renderBarGraph is going to apply a filter to the data and create a new key-value pair where the value is an array of key value pairs
-	renderBarGraph(filters) {
+	renderBarGraph() {
 		if (this.totalPatients == 0) {
 			iflog("renderBarGraph(): exiting as length of data is 0");
 			return;
 		}
-		if (!Array.isArray(filters)) {
-			filters = [ filters ];
-		}
-		filters.forEach( (filter, i) => {
+		this.appliedFilterList.forEach( (appliedFilter, i) => {
 			var chart = d3.select('#bar-chart').selectAll('.data-container');
-			chart = chart.selectAll('div .' + filter.ID + "-row"); 
+			chart.data(this.mainDomain);
+			chart = chart.selectAll('div .' + appliedFilter.filter.ID + "-row"); 
 			// TODO not sure what d is going to be here or what's going on in the key argument/function
-			chart = chart.data((d, i) => { return [ filter.values[i] ]; }, (d) => { return d.row + "_" + filter.ID; } );
+			chart = chart.data((d, i) => { 
+				return [ appliedFilter.values[i] ]; 
+			}, (d) => { 
+				return appliedFilter.filter.ID; // NOTE: d3 is okay w/ multiple groups having same keys, as long as same group has different keys
+			});
 			iflog("Filter: ");
-			iflog(filter);
+			iflog(appliedFilter);
 			iflog("Enter: ");
 			iflog(chart.enter());
 			iflog("Update: ");
@@ -122,16 +140,18 @@ class FilteredData {
 			iflog(chart.exit());
 			chart = chart.enter();
 			var label = chart.append('div');
-			label = label.attr("class", "filter-label " + filter.ID + "-row");
-			label = label.style("color", d3.schemeSet1[filter.colorIndex % 9]);
-			label = label.text(d => { return filter.label })
+			label = label.attr("class", "filter-label " + appliedFilter.filter.ID + "-row");
+			label = label.style("color", d3.schemeSet1[i % 9]);
+			label = label.text(d => { return appliedFilter.label })
 			var bar = chart.append('div');
-			bar = bar.style("background-color", d3.schemeSet1[filter.colorIndex % 9]);
-			bar = bar.attr("class", "bar " + filter.ID +"-row");
+			bar = bar.style("background-color", d3.schemeSet1[i % 9]);
+			bar = bar.attr("class", "bar " + appliedFilter.filter.ID +"-row");
 			bar = bar.style('width', d => {
-					return (100 * (d.value) / filter.sampleSize) + "%";
+					return (100 * (d) / appliedFilter.sampleSize) + "%";
 				});
-			bar = bar.text(d => { return Math.round(10000 * (d.value) / filter.sampleSize)/100 + "%" } );
+			bar = bar.text(d => { 
+				return Math.round(10000 * (d) / appliedFilter.sampleSize)/100 + "%" 
+			} );
 		});
 	}
 
@@ -152,6 +172,96 @@ class FilteredData {
 			dataContainer.className = "data-container" + ifodd;
 			dataContainer.setAttribute("id", label + "-container");
 		});
+	}
+
+
+	//
+	// USER INTERFACE (UI)
+	// 
+
+	// populateFilterList populates the filter list API
+	populateFilterList() {
+		var filterListContainer = document.getElementById("filter-list");
+		while (filterListContainer.firstChild) {
+			filterListContainer.removeChild(filterListContainer.lastChild);
+		}
+		this.appliedFilterList.forEach( (el) => {
+			let newOption = document.createElement("option");
+			newOption.textContent = el.label;
+			filterListContainer.appendChild(newOption)
+		});
+	}
+
+	// removeFilter will remove a filter from the appliedFilterList and rerender
+	removeFilter(filterLabel) {
+		var targetFilterId;
+		this.appliedFilterList = this.appliedFilterList.filter( (el) => { 
+			if (el.label != filterLabel) {	
+				return true;
+			}
+			targetFilterId = el.filter.ID;
+		});
+		return targetFilterId;
+	}
+
+	// genFilter reads the filter form and returns an applied filter
+	genFilter() {
+		var filterMaps = [];
+		var label = document.getElementById("label").value;
+		if (label == "") {
+			alert("please create a label");
+			return false;
+		}
+		var minAge = document.getElementById("min-age").value;
+		var ageString = "";
+		if (minAge === "") {
+			minAge = 0;
+		}
+		if (minAge != 0) {
+			filterMaps.push(new FilterMap("age", ">=", minAge));
+		}
+		var maxAge = document.getElementById("max-age").value;
+		if (maxAge === "") {
+			maxAge = 120;
+		}
+		if (maxAge < 120) {
+			filterMaps.push(new FilterMap("age", "<=", maxAge));
+		}
+		var comorbidityList = document.getElementById("comorbidity_options").querySelectorAll('input[type=checkbox]:checked');
+		var symptomList = document.getElementById("symptom_options").querySelectorAll('input[type=checkbox]:checked');
+		function wf(el) {
+			filterMaps.push(new FilterMap(el.getAttribute("id"), el.getAttribute("data-filter_op"), el.getAttribute("data-filter_val")));
+		}
+		comorbidityList.forEach(wf);
+		symptomList.forEach(wf);
+		return new AppliedFilter(label, new Filter(true, false, filterMaps)); // TODO: add covid+- to form
+		
+	}
+	//
+	// Link DS+GRAPH+UI Flows
+	// 
+
+	// userAddFilter is called when user clicks "add"
+	userAddFilter() {
+		var newAppliedFilter = this.genFilter()
+		this.pushAppliedFilter(newAppliedFilter);
+		this.prepareFilteredData(); 
+		this.renderBarGraph();
+		this.populateFilterList();
+	}
+
+	// userRemoveFilter is called when user clicks "delete"
+	userRemoveFilter(target) {
+		var targetID = this.removeFilter(target);
+		this.populateFilterList();
+		this.removeFilterRow(targetID);
+	}
+	initialize() {
+		this.writeMajorColumns(); 
+		this.prepareFilteredData();
+		this.renderBarGraph();
+		this.populateFilterList();
+
 	}
 }
 

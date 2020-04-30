@@ -11,7 +11,7 @@ function retrieveData(address) {
 				return;
 			}
 			response.text().then( text => {
-				var sourceData = new SourceData("",text);
+				var sourceData = new SourceData(address,text);
 				iflog("retrieveData.fetch.resolve: Data Retrieved");
 				resolve(sourceData);
 			});

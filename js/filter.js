@@ -18,9 +18,7 @@ class FilterMap {
 
 // Filter is basically a class that takes a data object and produces a summary based on the specified filters. It renders itself to the graph.
 class Filter {
-	constructor(label, positive, negative, filterMaps, colorIndex) {
-		this.label = label;
-		this.colorIndex = colorIndex;
+	constructor(positive, negative, filterMaps) {
 		this.positive = positive;
 		this.negative = negative;
 		this.filterMaps = filterMaps;
@@ -69,11 +67,4 @@ class Filter {
 		return true;
 	}
 }
-
-
-// filterList is the array of filters, these are the default filters
-var filterList = [
-	new Filter("COVID+", true, false, [], 0),
-	new Filter("COVID-", false, true, [new FilterMap("age", ">", 45)], 1)
-];
 

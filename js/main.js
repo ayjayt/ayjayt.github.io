@@ -41,10 +41,7 @@ window.addEventListener("load", (event) => {
 	Promise.all(remoteDataProm).catch( () => {
 		iflog("window.load(): at least one data retrieval failed")
 	}).finally( () => {
-		data.writeMajorColumns(); 
-		data.prepareFilteredData(filterList);
-		data.renderBarGraph(filterList);
-		populateFilterList();
+		data.initialize();
 	});
 	assignUIEvents();
 })
