@@ -46,3 +46,11 @@
    1px 1px 0 #000;
 }
 
+@media only screen and (max-width: 600px) {
+	#bar-chart .major-col-label {
+		font-size: 14px;
+	}
+	#bar-chart .filter-label {
+		font-size: 12px;
+	}
+}

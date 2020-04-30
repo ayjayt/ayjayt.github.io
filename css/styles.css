@@ -9,6 +9,7 @@ html {
 #main-title {
 	margin-left: 90px;
 	margin-right: 140px;
+	min-width: 157px;
 }
 #utility-bar {
 	text-align: right;
@@ -95,7 +96,7 @@ h3 {
 	justify-items: center;
 	grid-column-gap: 10px;
 	column-gap: 10px;
-	min-width: 350px;
+	min-width: 308px;
 	padding-left: 5px;
 	padding-right: 5px;
 }
@@ -104,6 +105,14 @@ h3 {
 	height: 100%;
 	min-height: 500px;
 	border: 1px solid black;
+}
+@media only screen and (max-width: 650px) {
+	#filter-form {
+		grid-template: auto / 1fr;
+	}
+	#filter-list {
+		min-height: 120%;
+	}
 }
 #filter-list .filter-list-option {
 	padding: 5px;
