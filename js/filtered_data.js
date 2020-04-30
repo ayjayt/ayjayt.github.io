@@ -180,9 +180,11 @@ class FilteredData {
 			bar = bar.style("background-color", d3.schemeSet1[i % 9]);
 			bar = bar.attr("class", "bar " + appliedFilter.filter.ID +"-row");
 			bar = bar.style('width', d => {
+					if (appliedFilter.sampleSize == 0) return 0%;
 					return (100 * (d) / appliedFilter.sampleSize) + "%";
 				});
-			bar = bar.text(d => { 
+			bar = bar.text(d => {
+				if (appliedFilter.sampleSize == 0) return "(n = 0)";
 				return Math.round(10000 * (d) / appliedFilter.sampleSize)/100 + "%" 
 			} );
 		});
