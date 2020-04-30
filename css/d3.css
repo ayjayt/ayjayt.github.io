@@ -1,5 +1,5 @@
 #bar-chart {
-	width: 100%;
+	width: 99%;
 	display: grid;
 	margin-left:5px;
 	grid-template: auto / 20px auto 1fr;
