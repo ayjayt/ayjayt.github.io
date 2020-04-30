@@ -46,8 +46,8 @@ class FilteredData {
 
 		// Or read from the URL
 		this.appliedFilterList = [
-			new AppliedFilter("COVID+", new Filter(true, false, [], 0)),
-			new AppliedFilter("COVID-", new Filter(false, true, [new FilterMap("age", ">", 45)]))
+			new AppliedFilter("COVID+", new Filter(true, false, [])),
+			new AppliedFilter("COVID-", new Filter(false, true, []))
 		];
 		// Warning: Very dependent on arrays within AppliedFilters	(this.AppliedFilter.values) being same order as this.mainDomain
 	}
@@ -212,6 +212,17 @@ class FilteredData {
 			alert("please create a label");
 			return false;
 		}
+		var positive = false;
+		var negative = false;
+		if (document.getElementById("covidp").checked) {
+			positive = true;
+		} else if (document.getElementById("covidn").checked) {
+			negative = true;
+		} else {
+			positive = true;
+			negative = true;
+		}
+		
 		var minAge = document.getElementById("min-age").value;
 		var ageString = "";
 		if (minAge === "") {
@@ -234,7 +245,7 @@ class FilteredData {
 		}
 		comorbidityList.forEach(wf);
 		symptomList.forEach(wf);
-		return new AppliedFilter(label, new Filter(true, false, filterMaps)); // TODO: add covid+- to form
+		return new AppliedFilter(label, new Filter(positive, negative, filterMaps)); // TODO: add covid+- to form
 		
 	}
 	//
