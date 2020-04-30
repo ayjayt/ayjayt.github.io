@@ -19,10 +19,9 @@ function assignUIEvents() {
 	});
 	document.getElementById("delete-filter").addEventListener("click", (e) => {
 		e.preventDefault();
-		var filterList = document.getElementById("filter-list");
-		if (filterList.value) { // TODO NOTE should probably return ID
-			data.userRemoveFilter(filterList.value);
-		}
+		var filterList = document.querySelector(".filter-list-option.active");
+		if ((filterList == null) || (filterList.length == 0)) return "";
+		data.userRemoveFilter(filterList.getAttribute("data-id"));
 	});
 	document.getElementById("add-filter").addEventListener("click", (e) => {
 		document.getElementById("filter-form-wrapper").style.display="block";
@@ -56,6 +55,7 @@ function assignUIEvents() {
 		}
 	});
 }
+
 
 
 	

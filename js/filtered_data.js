@@ -213,6 +213,20 @@ class FilteredData {
 	// USER INTERFACE (UI)
 	// 
 
+	// assignClickEventsFilterList makes the filter list selectable
+	assignClickEventsFilterList() {
+		// NOTE: we don't have to worry about redudandtly adding listeners because
+		// the list is destroyed each time an element is added
+		document.querySelectorAll(".filter-list-option").forEach( (el) => {
+			el.addEventListener("click", (ev) => {
+				document.querySelectorAll(".filter-list-option.active").forEach( (el) => {
+					el.className = "filter-list-option";
+				});
+				ev.currentTarget.className += " active";
+			});
+		});
+	}
+
 	// populateFilterList populates the filter list API
 	populateFilterList() {
 		var filterListContainer = document.getElementById("filter-list");
@@ -220,22 +234,22 @@ class FilteredData {
 			filterListContainer.removeChild(filterListContainer.lastChild);
 		}
 		this.appliedFilterList.forEach( (el) => {
-			let newOption = document.createElement("option");
+			let newOption = document.createElement("div");
+			newOption.className = "filter-list-option";
 			newOption.textContent = el.label;
+			newOption.setAttribute("data-id", el.filter.ID);
 			filterListContainer.appendChild(newOption)
 		});
+		this.assignClickEventsFilterList();
 	}
 
 	// removeFilter will remove a filter from the appliedFilterList and rerender
-	removeFilter(filterLabel) {
-		var targetFilterId;
+	removeFilter(targetID) {
 		this.appliedFilterList = this.appliedFilterList.filter( (el) => { 
-			if (el.label != filterLabel) {	
+			if (el.filter.ID != targetID) {	
 				return true;
 			}
-			targetFilterId = el.filter.ID;
 		});
-		return targetFilterId;
 	}
 
 	// genFilter reads the filter form and returns an applied filter
@@ -298,9 +312,10 @@ class FilteredData {
 
 	// userRemoveFilter is called when user clicks "delete"
 	userRemoveFilter(target) {
-		var targetID = this.removeFilter(target);
+		this.removeFilter(target);
+		if (target == "") return;
 		this.populateFilterList();
-		this.removeFilterRow(targetID);
+		this.removeFilterRow(target);
 	}
 	initialize() {
 		this.writeMajorColumns(); 

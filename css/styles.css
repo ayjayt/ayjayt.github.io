@@ -8,7 +8,7 @@ html {
 }
 #main-title {
 	margin-left: 90px;
-	margin-right: 90px;
+	margin-right: 140px;
 }
 #utility-bar {
 	text-align: right;
@@ -102,6 +102,18 @@ h3 {
 #filter-list {
 	width: 100%;
 	height: 100%;
+	min-height: 500px;
+	border: 1px solid black;
+}
+#filter-list .filter-list-option {
+	padding: 5px;
+	cursor: pointer;
+}
+#filter-list .filter-list-option:hover {
+	background-color: rgb(240, 240, 240);
+}
+#filter-list .filter-list-option.active {
+	background-color: rgb(230, 230, 230);
 }
 #filter-gen-container {
 	width: 100%;
