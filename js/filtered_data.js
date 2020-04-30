@@ -49,7 +49,7 @@ class FilteredData {
 		var compressedFilters = urlParams.get("filters");
 		var uncompressedFilters;
 		var builtObject = null;
-		if (compressedFilters.length > 0) {
+		if ((compressedFilters != null) && (compressedFilters.length > 0)) {
 			try {
 				uncompressedFilters = LZString.decompressFromEncodedURIComponent(compressedFilters);
 				builtObject = JSON.parse(uncompressedFilters);
