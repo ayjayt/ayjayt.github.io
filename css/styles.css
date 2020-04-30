@@ -10,21 +10,27 @@ html {
 	margin-left: 90px;
 	margin-right: 90px;
 }
-#add-filter, #filter-done {
-	position: fixed;
-	right: 20px;
-	top: 20px;
+#utility-bar {
+	text-align: right;
 	color: red;
-	font-size: 50px;
-	line-height: 55px;
+	float:right;
+	font-size: 24px;
+	line-height: 24px;
 	vertical-align:middle;
 	font-weight: bold;
 	cursor: pointer;
+	margin-right: 5px;
+	margin-top: 5px;
+}
+#utility-bar div {
+	margin-top: 2px;
+	margin-bottom:5px;
 }
 #filter-done {
 	position: absolute;
 	top:-6px;
 	right: 10px;
+	color: red;
 	font-size: 20px;
 }
 #add-filter span {

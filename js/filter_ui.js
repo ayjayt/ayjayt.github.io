@@ -33,6 +33,26 @@ function assignUIEvents() {
 		document.getElementById("filter-form").style.display="none";
 		document.getElementById("add-filter").style.display = "block";
 	});
+	document.getElementById("share").addEventListener("click", async event => {
+		var command = LZString.compressToEncodedURIComponent(JSON.stringify(data.appliedFilterList, ["label", "filter", "positive", "negative", "filterMaps", "key", "op", "val"]));
+		// TODO: simple static dictionary compression would shave off 15%
+		var link = window.location.href.split('?')[0] + "?filters=" + command;
+		iflog(link);
+		if (!navigator.clipboard) {
+			// TODO: ERROR
+			return;
+		}
+		const text = link;
+		try {
+			await navigator.clipboard.writeText(text);
+			event.target.textContent = 'copied';
+			window.setTimeout( (e) => {
+				e.target.textContent = "custom link";
+			}, 2000, event);
+		} catch (err) {
+			console.error('Failed to copy!', err);
+		}
+	});
 }
 
 

@@ -20,35 +20,63 @@ class FilteredData {
 		this.positivePatients = [];
 		this.negativePatients = [];
 		this.totalNegative = 0;
+		this.appliedFilterList = [];
 		this.mainDomain = [
-			{ preFilter: new FilterMap("dyspnea", "==", "TRUE"), text: "Dyspnea", key: "dyspnea", positive: [], negative: [] },
-			{ preFilter: new FilterMap("rhonci", "==", "TRUE"), text: "Rhonci", key: "rhonchi", positive: [], negative: [] },
-			{ preFilter: new FilterMap("wheezes", "==", "TRUE"), text: "Wheezing", key: "wheezes", positive: [], negative: [] },
-			{ preFilter: new FilterMap("cough", "==", "TRUE"), text: "Any Cough", key: "cough", positive: [], negative: [] },
-			{ preFilter: new FilterMap("cough_severity", "==", "Mild"), text: "Mild Cough", key: "cough_mild", positive: [], negative: [] },
-			{ preFilter: new FilterMap("cough_severity", "==", "Moderate"), text: "Moderate Cough", key: "cough_moderate", positive: [], negative: [] },
-			{ preFilter: new FilterMap("cough_severity", "==", "Severe"), text: "Severe Cough", key: "cough_severe", positive: [], negative: [] },
-			{ preFilter: new FilterMap("fever", "==", "TRUE"), text: "Fever", key: "fever", positive: [], negative: [] },
-			{ preFilter: new FilterMap("sob", "==", "TRUE"), text: "Any SOB", key: "sob", positive: [], negative: [] },
-			{ preFilter: new FilterMap("sob_severity", "==", "Mild"), text: "Mild SOB", key: "sob_mild", positive: [], negative: [] },
-			{ preFilter: new FilterMap("sob_severity", "==", "Moderate"), text: "Moderate SOB", key: "sob_moderate", positive: [], negative: [] },
-			{ preFilter: new FilterMap("sob_severity", "==", "Severe"), text: "Severe SOB", key: "sob_severe", positive:[], negative: [] },
-			{ preFilter: new FilterMap("diarrhea", "==", "TRUE"), text: "Diarrhea", key: "diarrhea", positive: [], negative: [] },
-			{ preFilter: new FilterMap("fatigue", "==", "TRUE"), text: "Fatigue", key: "fatigue", positive: [], negative: [] },
-			{ preFilter: new FilterMap("headache", "==", "TRUE"), text: "Headache", key: "headache", positive: [], negative: [] },
-			{ preFilter: new FilterMap("loss_of_smell", "==", "TRUE"), text: "Smell Loss", key: "loss_of_smell", positive: [], negative: [] },
-			{ preFilter: new FilterMap("loss_of_taste", "==", "TRUE"), text: "Taste Loss", key: "loss_of_taste", positive: [], negative: [] },
-			{ preFilter: new FilterMap("runny_nose", "==", "TRUE"), text: "Runny Nose", key: "runny_nose", positive: [], negative: [] },
-			{ preFilter: new FilterMap("muscle_sore", "==", "TRUE"), text: "Sore Musc.", key: "muscle_sore", positive: [], negative: [] },
-			{ preFilter: new FilterMap("sore_throat", "==", "TRUE"), text: "Sore Throat", key: "sore_throat", positive: [], negative: [] },
-			{ preFilter: new FilterMap("cxr_impression", "!=", ""), text: "Img. Indicatation", key: "cxr_impression", positive: [], negative: [] }
+			{ preFilter: new FilterMap("dyspnea", "==", "TRUE"), text: "Dyspnea", positive: [], negative: [] },
+			{ preFilter: new FilterMap("rhonci", "==", "TRUE"), text: "Rhonchi", positive: [], negative: [] },
+			{ preFilter: new FilterMap("wheezes", "==", "TRUE"), text: "Wheezing", positive: [], negative: [] },
+			{ preFilter: new FilterMap("cough", "==", "TRUE"), text: "Any Cough", positive: [], negative: [] },
+			{ preFilter: new FilterMap("cough_severity", "==", "Mild"), text: "Mild Cough", positive: [], negative: [] },
+			{ preFilter: new FilterMap("cough_severity", "==", "Moderate"), text: "Moderate Cough", positive: [], negative: [] },
+			{ preFilter: new FilterMap("cough_severity", "==", "Severe"), text: "Severe Cough", positive: [], negative: [] },
+			{ preFilter: new FilterMap("fever", "==", "TRUE"), text: "Fever", positive: [], negative: [] },
+			{ preFilter: new FilterMap("sob", "==", "TRUE"), text: "Any SOB", positive: [], negative: [] },
+			{ preFilter: new FilterMap("sob_severity", "==", "Mild"), text: "Mild SOB", positive: [], negative: [] },
+			{ preFilter: new FilterMap("sob_severity", "==", "Moderate"), text: "Moderate SOB", positive: [], negative: [] },
+			{ preFilter: new FilterMap("sob_severity", "==", "Severe"), text: "Severe SOB", positive:[], negative: [] },
+			{ preFilter: new FilterMap("diarrhea", "==", "TRUE"), text: "Diarrhea", positive: [], negative: [] },
+			{ preFilter: new FilterMap("fatigue", "==", "TRUE"), text: "Fatigue", positive: [], negative: [] },
+			{ preFilter: new FilterMap("headache", "==", "TRUE"), text: "Headache", positive: [], negative: [] },
+			{ preFilter: new FilterMap("loss_of_smell", "==", "TRUE"), text: "Smell Loss", positive: [], negative: [] },
+			{ preFilter: new FilterMap("loss_of_taste", "==", "TRUE"), text: "Taste Loss", positive: [], negative: [] },
+			{ preFilter: new FilterMap("runny_nose", "==", "TRUE"), text: "Runny Nose", positive: [], negative: [] },
+			{ preFilter: new FilterMap("muscle_sore", "==", "TRUE"), text: "Sore Musc.", positive: [], negative: [] },
+			{ preFilter: new FilterMap("sore_throat", "==", "TRUE"), text: "Sore Throat", positive: [], negative: [] },
+			{ preFilter: new FilterMap("cxr_impression", "!=", ""), text: "Img. Indicatation", positive: [], negative: [] }
 		];
 
-		// Or read from the URL
-		this.appliedFilterList = [
-			new AppliedFilter("COVID+", new Filter(true, false, [])),
-			new AppliedFilter("COVID-", new Filter(false, true, []))
-		];
+		var urlParams = new URLSearchParams(window.location.search);
+		var compressedFilters = urlParams.get("filters");
+		var uncompressedFilters;
+		var builtObject = null;
+		if (compressedFilters.length > 0) {
+			try {
+				uncompressedFilters = LZString.decompressFromEncodedURIComponent(compressedFilters);
+				builtObject = JSON.parse(uncompressedFilters);
+			} catch (err) {
+				builtObject = null;
+			}
+		}
+		if (builtObject != null) {
+			try {
+				builtObject.forEach( (el) => {
+					var filterMaps = [];
+					el.filter.filterMaps.forEach( (filterMapEl) => {
+						filterMaps.push(new FilterMap(filterMapEl.key, filterMapEl.op, filterMapEl.val));
+					});
+					var newFilter = new Filter(el.filter.positive, el.filter.negative, filterMaps);
+					this.appliedFilterList.push(new AppliedFilter(el.label, newFilter));
+				});
+			} catch (err) {
+				builtObject = null;
+			}
+		}
+		if (builtObject == null) {
+			this.appliedFilterList = [
+				new AppliedFilter("COVID+", new Filter(true, false, [])),
+				new AppliedFilter("COVID-", new Filter(false, true, []))
+			];
+		}
 		// Warning: Very dependent on arrays within AppliedFilters	(this.AppliedFilter.values) being same order as this.mainDomain
 	}
 	// pushAppliedFilter adds a filter to the appliedFilterList
@@ -109,9 +137,14 @@ class FilteredData {
 		document.querySelectorAll("." + filterID + "-row").forEach( (el) => { 
 			return el.remove();
 		});
-		// TODO: what's the best way to fix colors now? rerendering doesn't work- yet. if axis was data, maybe.
-		// TODO: probably just edit function above to get siblings and redo the two color calculations as in render
-		// TODO: remove filter colorIndex
+		document.querySelectorAll(".data-container").forEach( (el) => {
+			el.querySelectorAll(".filter-label").forEach( (el, i) => {
+				el.style.color = d3.schemeSet1[i % 9];
+			});
+			el.querySelectorAll(".bar").forEach( (el, i) => {
+				el.style.backgroundColor = d3.schemeSet1[i % 9];
+			});
+		});
 	}
 
 	// renderBarGraph is going to apply a filter to the data and create a new key-value pair where the value is an array of key value pairs
@@ -165,12 +198,13 @@ class FilteredData {
 				ifodd= " odd";
 			} 
 			var label = labelObject.text;
+			var labelID = labelObject.preFilter.key;
 			var majorColumn = canvas.appendChild(document.createElement("div"));
 			majorColumn.className = "major-col-label" + ifodd;
 			majorColumn.innerHTML = label;
 			var dataContainer = canvas.appendChild(document.createElement("div"));
 			dataContainer.className = "data-container" + ifodd;
-			dataContainer.setAttribute("id", label + "-container");
+			dataContainer.setAttribute("id", labelID + "-container");
 		});
 	}
 
