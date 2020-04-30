@@ -216,7 +216,7 @@ class FilteredData {
 				if (target.style.height == "0px") {
 					target.style.height = "";
 					ev.currentTarget.nextSibling.style.fontSize = "";
-					ev.currentTarget.nextSibling.style.width = "100%";
+					ev.currentTarget.nextSibling.style.width = "";
 					ev.currentTarget.textContent = "+";
 				} else {
 					target.style.height = "0px";

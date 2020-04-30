@@ -17,7 +17,8 @@
 	align-self: center;
 	font-size: 28px;
 	width: 100%;
-	transition: font-size .8s ease, width .8s ease;
+	transition: font-size .8s ease, width 1.5s ease;
+	white-space: nowrap;
 }
 
 #bar-chart .data-container {
