@@ -28,8 +28,9 @@ html {
 }
 #filter-done {
 	position: absolute;
-	top:-6px;
+	top:6px;
 	right: 10px;
+	cursor: pointer;
 	color: red;
 	font-size: 20px;
 }

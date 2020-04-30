@@ -2,7 +2,9 @@
 function assignUIEvents() {
 	document.getElementById("filter-gen").addEventListener("submit", (e) => {
 		e.preventDefault();
-		data.userAddFilter();
+		if (!data.userAddFilter()) {
+			return;
+		}
 		document.getElementById("filter-gen").reset();
 		document.getElementById("filter-list").style.transition = "";
 		document.getElementById("filter-list").style.backgroundColor = "#7aff7a";

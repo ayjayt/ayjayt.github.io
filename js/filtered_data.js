@@ -289,6 +289,7 @@ class FilteredData {
 	// userAddFilter is called when user clicks "add"
 	userAddFilter() {
 		var newAppliedFilter = this.genFilter()
+		if (newAppliedFilter == false) return false;
 		this.pushAppliedFilter(newAppliedFilter);
 		this.prepareFilteredData(); 
 		this.renderBarGraph();
