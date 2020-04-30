@@ -198,7 +198,34 @@ class FilteredData {
 				ifodd= " odd";
 			} 
 			var label = labelObject.text;
-			var labelID = labelObject.preFilter.key;
+			var labelID = "";
+			for (var i = 0; i < labelObject.text.length; i++) {
+				let temp = (labelObject.text.charCodeAt(i)-30).toString();
+				if (temp.length == 1) temp = "0" + temp;
+				labelID += temp;
+			}
+			// NOTE: ^^ i hate escaping it like this but this ID will pass through multiple APIs
+			// ...each with slightly different requirements for escaping symbols so no built in 
+			// ...escape, hash, or encoding will satisfy all of them
+			var collapser = canvas.appendChild(document.createElement("div"));
+			collapser.textContent = "+";
+			collapser.className = "collapser";
+			collapser.setAttribute("data-target", labelID+"-container");
+			collapser.addEventListener("click", (ev) => {
+				var target = document.getElementById(ev.currentTarget.getAttribute("data-target"));
+				if (target.style.height == "0px") {
+					target.style.height = "";
+					ev.currentTarget.nextSibling.style.fontSize = "";
+					ev.currentTarget.nextSibling.style.width = "100%";
+					ev.currentTarget.textContent = "+";
+				} else {
+					target.style.height = "0px";
+					target.style.overflow = "hidden";
+					ev.currentTarget.nextSibling.style.fontSize = "12px";
+					ev.currentTarget.nextSibling.style.width = "0";
+					ev.currentTarget.textContent = "-";
+				}
+			})
 			var majorColumn = canvas.appendChild(document.createElement("div"));
 			majorColumn.className = "major-col-label" + ifodd;
 			majorColumn.innerHTML = label;
@@ -236,7 +263,7 @@ class FilteredData {
 		this.appliedFilterList.forEach( (el) => {
 			let newOption = document.createElement("div");
 			newOption.className = "filter-list-option";
-			newOption.textContent = el.label;
+			newOption.textContent = el.label + " (n = "+el.sampleSize+")";
 			newOption.setAttribute("data-id", el.filter.ID);
 			filterListContainer.appendChild(newOption)
 		});

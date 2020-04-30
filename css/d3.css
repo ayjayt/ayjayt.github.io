@@ -2,17 +2,22 @@
 	width: 100%;
 	display: grid;
 	margin-left:5px;
-	grid-template: auto / auto 1fr;
+	grid-template: auto / 20px auto 1fr;
 	grid-row-gap: 1ex;
 	row-gap: 1ex;
 	grid-column-gap: 1ex;
 	column-gap: 1ex;
 }
-
+.collapser {
+	cursor: pointer;
+	align-self: center;
+}
 #bar-chart .major-col-label {
 	text-align: right;
 	align-self: center;
 	font-size: 28px;
+	width: 100%;
+	transition: font-size .8s ease, width .8s ease;
 }
 
 #bar-chart .data-container {
@@ -21,6 +26,8 @@
 	grid-column-gap: 1ex;
 	column-gap: 1ex;
 	background-color: white;
+	height: 100%;
+	transition: height .8s ease;
 }
 
 #bar-chart .data-container.odd{
