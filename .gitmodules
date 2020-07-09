@@ -1,3 +1,3 @@
 [submodule "covidclinicaldata"]
 	path = covidclinicaldata
-	url = ssh://git@github.com/mdcollab/covidclinicaldata
+	url = https://github.com/mdcollab/covidclinicaldata
