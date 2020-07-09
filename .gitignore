@@ -18,3 +18,4 @@ gerbers.zip
 gerbers/
 *.lck
 python-envs/
+*/.ipynb_checkpoints/
