@@ -9,8 +9,8 @@ version.sh will just copy the current ref hash into a div. It's always one behin
 
 ## Submodules
 
-This repository uses mdcolab/covidclinicaldata as a submodule.
+This repository uses mdcollab/covidclinicaldata as a submodule.
 
 Jupyter and git don't play too nicely- jupyter changes meta data, git wants to commit. jupyter creates hidden files, git wants to commit. I removed my own write permissions for this directory during daily drivings.
 
-`sudo chown 555 covidclinicaldata`
+You can maybe add exclude lines to `.git/info/exclude` and `.git/module/covidclinicaldata/info/exclude`.
