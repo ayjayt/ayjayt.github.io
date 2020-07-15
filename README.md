@@ -12,9 +12,9 @@ version.sh will just copy the current ref hash into a div. It's always one behin
 
 ## Notebook diffying
 
-Git & other plaintext tools don't like json.
+Git & other plaintext tools don't like json. However, git has been configured to use nbdime to do merge's and diff's for ipynb files.
 
-`pip install nbdime`
+`pip install nbdime` must be installed. This setting is marked in `.gitattributes` and was set with `nbdime config-git --enable`. More is written [here](https://nbdime.readthedocs.io/en/latest/vcs.html#merge-driver).
 
 Now you have some useful commands:
 
