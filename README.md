@@ -6,6 +6,10 @@ The new iterations is on based on:
 
 We'll be using scikit and kmapper. The javascript is not the focus right now, we're making notebooks.
 
+## Dependencies
+
+`pip install numpy pandas scikit-learn matplotlib seaborn ipynb jupyterlab`
+
 ## Tools
 
 version.sh will just copy the current ref hash into a div. It's always one behind, obviously.
