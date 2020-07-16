@@ -66,3 +66,10 @@ def plotCol(col: pd.Series, n, df) -> pd.Series:
         ax.text(0.5, 0.5, 'too many uniques', size=12, ha="center", transform=ax.transAxes, style='italic',
         bbox={'facecolor': 'red', 'alpha': 0.5, 'pad': 10})
     return None
+
+def plotDistances(distances):
+    width = np.max(distances) - np.min(distances)
+    distancesImage = (((distances - np.min(distances))/width)*255).astype(np.uint8)
+    _ = plt.figure(figsize=(20,20))
+    _ = plt.gray()
+    _ = plt.imshow(distancesImage)
