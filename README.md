@@ -8,7 +8,7 @@ We'll be using scikit and kmapper. The javascript is not the focus right now, we
 
 ## Dependencies
 
-`pip install numpy pandas scikit-learn matplotlib seaborn ipynb jupyterlab`
+`pip install numpy pandas scikit-learn matplotlib seaborn ipynb jupyterlab kmapper Python-Igraph Plotly Ipywidgets`
 
 ## Tools
 
